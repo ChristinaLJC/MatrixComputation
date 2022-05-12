@@ -3,3 +3,6 @@ a.out: demo.cpp
 
 run: a.out 
 	./a.out 
+
+clean: 
+	-rm -rf a.out
