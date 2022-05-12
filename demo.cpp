@@ -27,8 +27,22 @@ void test2();
 void test3(); 
 void test4(); 
 
+template <typename T> 
+void print(T ); 
+
+template <typename T> 
+void print(T ) requires std::is_same_v<T, int> {
+    std::cout << "I am integer! " << std::endl; 
+}
+
+template <typename T> 
+void print(T ) requires (!std::is_same_v<T, int>) {
+    std::cout << "I am not an integer! " << std::endl; 
+}
+
 int main() {
-    test4(); 
+    print(1); 
+    print(""); 
 }
 
 void test4() {
