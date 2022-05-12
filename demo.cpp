@@ -1,4 +1,5 @@
 #include <iostream> 
+#include <complex> 
 
 class MyClass {
     public: 
@@ -24,9 +25,16 @@ ostream &operator<<(ostream &o, MyClass &) {
 void test1_question(); 
 void test2(); 
 void test3(); 
+void test4(); 
 
 int main() {
-    test3(); 
+    test4(); 
+}
+
+void test4() {
+    using namespace std::literals::complex_literals; 
+    std::complex<double> complex = 1. + 2i; 
+    std::cout << complex.real() << ", " << complex.imag() << std::endl; 
 }
 
 void test3() {
