@@ -7,6 +7,14 @@ class MyClass {
     }
 }; 
 
+class MyClassPtr {
+    public: 
+    MyClass *ptr; 
+    MyClass *operator->() {
+        return ptr; 
+    }
+}; 
+
 using std::ostream; 
 
 ostream &operator<<(ostream &o, MyClass &) {
@@ -15,9 +23,16 @@ ostream &operator<<(ostream &o, MyClass &) {
 
 void test1_question(); 
 void test2(); 
+void test3(); 
 
 int main() {
-    test2(); 
+    test3(); 
+}
+
+void test3() {
+    MyClass ins;
+    MyClassPtr p = {.ptr = &ins}; 
+    p->operator()(); 
 }
 
 void test2() {
