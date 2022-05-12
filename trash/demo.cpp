@@ -3,6 +3,9 @@
 #include <iostream> 
 
 int main() {
+
+    // std::cout << (2 <=> 3) << std::endl; 
+
     line_matrix<int, 3, 2> first; 
     (int& )first[0][0] = 3; (int& )first[0][1] = 2; 
     (int& )first[1][0] = 1; (int& )first[1][1] = 8; 
