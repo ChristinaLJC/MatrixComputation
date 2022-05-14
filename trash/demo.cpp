@@ -1,46 +1,73 @@
-#include "line_matrix.hpp" 
-
 #include <iostream> 
+#include <complex> 
+#include <future> 
 
-int main() {
+class MyClass {
+    public: 
+    void operator()() {
+        std::cout << "Invoke me! \n"; 
+    }
+}; 
 
-    // std::cout << (2 <=> 3) << std::endl; 
+class MyClassPtr {
+    public: 
+    MyClass *ptr; 
+    MyClass *operator->() {
+        return ptr; 
+    }
+}; 
 
-    std::cout << sizeof(line_matrix<int, 1, 1>) << std::endl;
+using std::ostream; 
 
-    line_matrix<int, 3, 2> first; 
-    (int& )first[0][0] = 3; (int& )first[0][1] = 2; 
-    (int& )first[1][0] = 1; (int& )first[1][1] = 8; 
-    (int& )first[2][0] = 6; (int& )first[2][1] = -2; 
-
-    line_matrix<int, 2, 1> second; 
-    (int& )second[0][0] = 1; (int& )second[1][0] = 2; 
-
-    auto ans = first * second; 
-
-    std::cout << "ans: \n" << ans; 
-
-    for (auto v: first[0]) 
-        ++v; 
-    
-    std::cout << "first: \n" << first; 
-
-    std::cout << "ans: \n" << (first * second); 
-    
+ostream &operator<<(ostream &o, MyClass &) {
+    return o << "MyClass{instance}";
 }
 
-// Consider the formula: 
-// 3x + 2y = 7
-// x + 8y = 17 
-// 6x - 2y = 2 
-// It's easily to know that: 
-// The matrix A: 
-// [3, 2] 
-// [1, 8] 
-// [6, -2] 
+void test1_question(); 
+void test2(); 
+void test3(); 
+void test4(); 
 
-// The matrix B: 
-// [x = 1] 
-// [y = 2]
+template <typename T> 
+void print(T ); 
 
-// Then get the result: A * B! 
+template <typename T> 
+void print(T ) requires std::is_same_v<T, int> {
+    std::cout << "I am integer! " << std::endl; 
+}
+
+template <typename T> 
+void print(T ) requires (!std::is_same_v<T, int>) {
+    std::cout << "I am not an integer! " << std::endl; 
+}
+
+int main() {
+    auto g = async(std::launch::async, []{return 21; });
+    std::cout << g.get() << std::endl;  
+}
+
+void test4() {
+    using namespace std::literals::complex_literals; 
+    std::complex<double> complex = 1. + 2i; 
+    std::cout << complex.real() << ", " << complex.imag() << std::endl; 
+}
+
+void test3() {
+    MyClass ins;
+    MyClassPtr p = {.ptr = &ins}; 
+    p->operator()(); 
+}
+
+void test2() {
+    MyClass ins; 
+    ins(); 
+}
+
+void test1_question() {
+    MyClass ins; 
+    std::cout << ins << std::endl; 
+    // Choose: A
+    // operator<<(std::cout, ins); 
+    // Choose: B 
+    // std::cout.operator<<(ins); 
+}
