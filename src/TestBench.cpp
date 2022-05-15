@@ -188,4 +188,6 @@ int main() {
     }
 
     deal_result(results); 
+
+    exit(0);
 }

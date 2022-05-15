@@ -26,26 +26,23 @@ namespace Matrix {
         std::enable_if_t< 
             CanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>, Container<typename ResultTypeImpl<LhsType, RhsType>::type>> 
     {
-        auto result = Container<typename ResultTypeImpl<LhsType, RhsType>::type>{}; 
         if (bool(lhs_matrix.size() != rhs_matrix.size())) {
             using namespace std::literals; 
             throw std::runtime_error("Left Handside Matrix's size = "s + std::to_string(lhs_matrix.size()) + ", but right handside is " 
                 + std::to_string(rhs_matrix.size()) + ". "); 
         }
+        auto result = Container<typename ResultTypeImpl<LhsType, RhsType>::type>{}; 
         size_t size = lhs_matrix.size(); 
-        if constexpr (requires {result.reserve(std::declval<size_t>()); }) {
-            result.reserve(size); 
-        }
-        for (size_t i = 0; i < size; ++i) {
-            result.push_back(lhs_matrix[i] + rhs_matrix[i]); 
-        }
+        result.resize(size); 
+        auto add_op_method = [&result](auto &&this_vector) {
+            size_t poi {}; 
+            for (auto &&t: this_vector) {
+                result.at(poi) += t; 
+                ++poi; 
+            } 
+        }; 
+        add_op_method(lhs_matrix); 
+        add_op_method(rhs_matrix);
         return result; 
     }
-
-    // template <template <typename...> typename A, template <typename ...> typename B, typename DataTypeA, typename DataTypeB, typename... AArgs, typename... BArgs, 
-    // template <typename> typename S = DefaultAllocatorVector > 
-    // auto add(A<DataTypeA, AArgs...>, B<DataTypeB, BArgs...>) {
-    //     std::cout << "add! \n"; 
-    // }
-
 }
