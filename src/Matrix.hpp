@@ -14,15 +14,22 @@ namespace Matrix {
     template <typename T> 
     using DefaultAllocatorVector = std::vector<T, std::allocator<T>>; 
 
+    template <typename T, typename V> 
+    concept CanCompSize = requires {
+        { std::declval<T>().size() != std::declval<V>().size() } -> std::convertible_to<bool>; 
+    }; 
+
     template <template <typename, typename> typename ResultTypeImpl = FundamentalAdd, 
         template <typename...> typename Container = std::vector, 
         typename LhsType, typename RhsType, 
         template <typename... > typename LhsContainer, template <typename...> typename RhsContainer, 
         typename... Useless1, nullptr_t = nullptr, typename... Useless2> 
-    auto add(LhsContainer<LhsType, Useless1...> const &lhs_matrix, RhsContainer<RhsType, Useless2...> const &rhs_matrix) -> Container<typename ResultTypeImpl<LhsType, RhsType>::type>  
+    auto add(LhsContainer<LhsType, Useless1...> const &lhs_matrix, RhsContainer<RhsType, Useless2...> const &rhs_matrix) -> 
+        std::enable_if_t< 
+            CanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>, Container<typename ResultTypeImpl<LhsType, RhsType>::type>> 
     {
         auto result = Container<typename ResultTypeImpl<LhsType, RhsType>::type>{}; 
-        if (lhs_matrix.size() != rhs_matrix.size()) {
+        if (bool(lhs_matrix.size() != rhs_matrix.size())) {
             using namespace std::literals; 
             throw std::runtime_error("Left Handside Matrix's size = "s + std::to_string(lhs_matrix.size()) + ", but right handside is " 
                 + std::to_string(rhs_matrix.size()) + ". "); 

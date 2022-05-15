@@ -5,7 +5,8 @@
 int main() {
     std::vector<int> x {1, 2, 3, 4}; 
     std::vector<float> y {2.5, 3.4, 4.3, .1}; 
-    auto &&v = Matrix::add(x, y); 
+    using namespace Matrix; 
+    auto &&v = add(x, y); 
     for (auto s: v) {
         std::cout << s << " "; 
     }
