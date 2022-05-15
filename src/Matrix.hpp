@@ -1,8 +1,6 @@
-#include <cstdint> 
-#include <vector> 
-#include <type_traits> 
-#include <string> 
-#include <exception> 
+#pragma once 
+
+#include "std.hpp"
 
 namespace Matrix {
 
