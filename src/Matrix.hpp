@@ -15,6 +15,7 @@ namespace Matrix {
     template <typename T, typename V> 
     concept CanCompSize = requires {
         { std::declval<T>().size() != std::declval<V>().size() } -> std::convertible_to<bool>; 
+        { std::declval<T>().size() == std::declval<V>().size() } -> std::convertible_to<bool>; 
     }; 
 
     template <template <typename, typename> typename ResultTypeImpl = FundamentalAdd, 
