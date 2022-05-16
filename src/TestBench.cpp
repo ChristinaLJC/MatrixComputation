@@ -177,6 +177,9 @@ int main() {
                         results.at(i) = asyncs.at(i).get(); 
                     } catch (AssertError &error) {
                         results.at(i).emplace<AssertError>(std::move(error)); 
+                    } catch (std::runtime_error &run_error) {
+                        using std::literals::operator""s; 
+                        results.at(i).emplace<AssertError>("[Runtime Error]: "s + run_error.what()); 
                     }
                 } else {
                     flag = false; 

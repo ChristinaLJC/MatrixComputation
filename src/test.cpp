@@ -141,3 +141,11 @@ TEST_METHOD {
         ++x; 
     }
 }
+
+TEST_METHOD {
+    using namespace Matrix; 
+    auto x = {1, 2, 3}; 
+    auto y = {2, 4} ;
+    auto &&plus = add(x, y); 
+    bassert (plus == std::vector{3, 6, 3}, "{1,2,3} + {2,4} should equals {3,6,3}. ");   
+}
