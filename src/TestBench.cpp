@@ -112,7 +112,7 @@ std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertErro
         for (int i = 0; i < results.size(); ++i) {
             if (auto err_pt = std::get_if<AssertError>(&results.at(i)); err_pt) {
                 print_out_message << L'\t' << i << L':' << L' '
-                    << std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(err_pt->what_as_string()) << L'\n'; 
+                    << std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(err_pt->what_as_string()) << L'\n'; 
             }
         }
     }
