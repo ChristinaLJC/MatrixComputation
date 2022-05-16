@@ -56,5 +56,9 @@ The demo command is provided for WSL: `g++ -std=c++2a -fconcepts -D TEST_FILE=\"
 If you invoke this command but meet a mass code display, you can refer to these below to fix it. 
 
 - `chcp 65001`: Change your code in utf-8 format. 
-- 'chcp 936`: Change your code in gbk format. (Maybe) 
+- `chcp 936`: Change your code in gbk format. (Maybe) 
 
+## Windows Support 
+
+If you are using powershell, maybe the program would not be executed correctly with '-D' flag. 
+You can use the command: `cmd.exe /c 'g++ -std=c++2a -D TEST_FILE=\"test.cpp\" TestBench.cpp' to reach you aim indirectly. 
