@@ -21,8 +21,8 @@ namespace Matrix {
     template <typename T, typename V> 
     struct IsCanCompSize {
         template <typename U = T, typename U2 = V, typename = std::enable_if_t< 
-            std::convertible_to<decltype(std::declval<U>().size() == std::declval<U2>().size()), bool> && 
-            std::convertible_to<decltype(std::declval<U2>().size() != std::declval<U2>().size()), bool>>>
+            std::is_convertible_v<decltype(std::declval<U>().size() == std::declval<U2>().size()), bool> && 
+            std::is_convertible_v<decltype(std::declval<U2>().size() != std::declval<U2>().size()), bool>>>
         std::true_type static test(nullptr_t ); 
         std::false_type static test(...); 
         static constexpr bool value = decltype(test(nullptr))::value; 
