@@ -27,3 +27,24 @@ Below is #todo list.
 - [ ] Support the division operation between high-precisions. (Including fundamental arithmetical instances) 
 - [ ] Support the string-format method for a high-precision class type. 
 - [ ] Support the `Rational` type, using the high-precision custom class.  
+
+## Test Branch 
+
+The file *TestBench.cpp* is the core test file for you to test something working well or not. 
+
+Using this format to write your codes: 
+
+```C++
+TEST_METHOD {
+    // todo: write your codes. 
+    // This method do not have any incoming parameters, you have also no need to return anything in it. 
+    // The assert method: bassert(bool expression, the error message); 
+    // You can use it smoothly and do some assertions. 
+}
+``` 
+
+The specific command for you to run is like that: `g++ -std=c++?? -D TEST_FILD=\"(Please enter your file path! )\" TestBench.cpp` 
+
+And run the output executable file *a.out* or *a.exe*. 
+
+The demo command is provided for WSL: `g++ -std=c++2a -fconcepts -D TEST_FILE=\"test.cpp\" TestBench.cpp && ./a.out` 
