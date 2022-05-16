@@ -71,9 +71,9 @@ std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertErro
     double average_time {}; 
 
     for (auto &it: results) {
-        if (auto fail_sit = get_if<AssertError>(&it); fail_sit) {
+        if (auto fail_sit = std::get_if<AssertError>(&it); fail_sit) {
             ++fails; 
-        } else if (auto succ_sit = get_if<double>(&it); succ_sit) {
+        } else if (auto succ_sit = std::get_if<double>(&it); succ_sit) {
             ++successful; 
             average_time += *succ_sit;
         }
@@ -110,7 +110,7 @@ std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertErro
     if (fails > 0) {
         print_out_message << L"\n发生错误测试列表：\n\n"; 
         for (int i = 0; i < results.size(); ++i) {
-            if (auto err_pt = get_if<AssertError>(&results.at(i)); err_pt) {
+            if (auto err_pt = std::get_if<AssertError>(&results.at(i)); err_pt) {
                 print_out_message << L'\t' << i << L':' << L' '
                     << std::wstring_convert<std::codecvt_utf8<wchar_t>>().from_bytes(err_pt->what_as_string()) << L'\n'; 
             }
@@ -121,7 +121,7 @@ std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertErro
         {
             bool have_blank = false; 
             for (int i = 0; i < results.size(); ++i) {
-                if (auto overtime_p = get_if<std::monostate>(&results.at(i)); overtime_p) {
+                if (auto overtime_p = std::get_if<std::monostate>(&results.at(i)); overtime_p) {
                     if (have_blank)
                         print_out_message << L' '; 
                     print_out_message << i; 
@@ -163,7 +163,7 @@ int main() {
     while (std::chrono::high_resolution_clock::now() <= until) {
         bool flag = true; 
         for (size_t i = 0; i < results.size(); ++i) {
-            if (auto pt = get_if<std::monostate>(&results.at(i)); pt) {
+            if (auto pt = std::get_if<std::monostate>(&results.at(i)); pt) {
                 // Find a flag do not finish well! 
                 if (auto state = asyncs.at(i).wait_for(0s); state == std::future_status::ready) {
                     try {
