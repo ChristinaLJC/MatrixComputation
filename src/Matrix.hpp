@@ -34,9 +34,9 @@ namespace Matrix {
         template <typename... > typename LhsContainer, template <typename...> typename RhsContainer, 
         typename... Useless1, nullptr_t = nullptr, typename... Useless2> 
     auto add(LhsContainer<LhsType, Useless1...> const &lhs_matrix, RhsContainer<RhsType, Useless2...> const &rhs_matrix) -> 
-        // std::enable_if_t< 
-        //     CanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>, Container<typename ResultTypeImpl<LhsType, RhsType>::type>> 
-        std::enable_if_t < IsCanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>::value, 
+        std::enable_if_t < 
+//      CanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>, 
+        IsCanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>::value, 
         Container<typename ResultTypeImpl<LhsType, RhsType>::type> 
         >
     {
