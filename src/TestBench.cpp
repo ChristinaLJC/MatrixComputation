@@ -22,13 +22,6 @@ void bassert (bool bool_expression, std::string info = "", std::source_location 
             + ' ' + info); 
     }
 }
-
-// "file: "
-            //   << location.file_name() << "("
-            //   << location.line() << ":"
-            //   << location.column() << ") `"
-            //   << location.function_name() << "`: "
-            //   << message << '\n'
 #else 
 void bassert (bool bool_expression, std::string info = "") {
     if (!bool_expression)
