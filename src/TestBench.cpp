@@ -145,7 +145,7 @@ void deal_result(std::vector<std::variant<std::monostate, AssertError, double>> 
         // std::wcout.flush(); 
         std::cout << i; 
         std::cout.flush(); 
-        std::this_thread::sleep_for(23ms); 
+        std::this_thread::sleep_for(5703us); 
     }
 }
 
