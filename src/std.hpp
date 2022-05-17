@@ -1,5 +1,6 @@
 #pragma once 
 
+#include <array>
 #include <chrono>
 #include <codecvt> 
 #include <cstddef>
@@ -10,6 +11,7 @@
 #include <iomanip>
 #include <iostream> 
 #include <locale> 
+#include <numeric>
 #include <optional> 
 
 #ifdef __cpp_lib_source_location
@@ -19,6 +21,7 @@
 #include <string> 
 #include <sstream> 
 #include <thread>
+#include <tuple>
 #include <type_traits> 
 #include <variant> 
 #include <vector> 
