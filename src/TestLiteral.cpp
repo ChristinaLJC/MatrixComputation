@@ -25,3 +25,11 @@ TEST_METHOD {
     auto v = 077_pn; 
     bassert_eq_actual_expect(to_string(v), "63");
 }
+
+TEST_METHOD {
+    using namespace Mx; 
+    auto v = 777_pn; 
+    for (auto i = 0; i < 19; ++i)
+        mul_u32_then_eq(v, 777); 
+    bassert_eq_actual_expect(to_string(v), ""); 
+}
