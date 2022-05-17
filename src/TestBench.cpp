@@ -28,6 +28,23 @@ void bassert (bool bool_expression, std::string info = "") {
         throw AssertError(std::move(info)); 
 }
 #endif
+template <typename T, typename V> 
+void bassert_eq(T &&t, V &&v) {
+    if (t != v) {
+        std::stringstream error_info; 
+        error_info << "[Equivalent Assertion Fail: ] Expected: \""
+            << v 
+            << "\", Actual: \"" 
+            << t 
+            << "\". \n";
+        throw AssertError(error_info.str());
+    }
+}
+
+template <typename T, typename V> 
+void bassert_eq_actual_expect(T &&t, V &&v) {
+    bassert_eq(std::forward<T>(t), std::forward<V>(v));
+}
 
 template <size_t > 
 void test(); 

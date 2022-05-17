@@ -17,6 +17,7 @@ namespace Matrix {
         PNumber &div_u32_then_eq(PNumber &, uint32_t, uint32_t *); 
 
         std::string to_string(PNumber const &); 
+        std::string to_hex_string(PNumber const &); 
 
         inline PNumber &div_u32_then_eq(PNumber &self, uint32_t to_div, uint32_t *remainder) {
             auto length = self.size(); 
@@ -59,6 +60,24 @@ namespace Matrix {
                 result += *it; 
             }
             return result; 
+        }
+
+        inline std::string to_hex_string (PNumber const &self) {
+            size_t effect_position = self.size(); 
+            for (; effect_position && !self.at(effect_position-1); --effect_position) {
+            }
+            if (!effect_position) {
+                return "0x0"; 
+            }
+            std::stringstream result; 
+            result << std::hex; 
+            result << "0x" << self.at(--effect_position); 
+            result << std::setfill('0'); 
+            while (effect_position) {
+                result << std::setw(8); 
+                result << self.at(--effect_position); 
+            }
+            return result.str(); 
         }
     }
 }

@@ -22,5 +22,6 @@ TEST_METHOD {
     using std::literals::operator ""s; 
 
     auto correct_str = "138683118545689835737939019720389406345902876722687432540821294940160000000000000"s; 
-    bassert (Matrix::to_string(vals) == correct_str, "1 * 2 * ... * 59 = "s + correct_str + ",\n\tbut actually: " + Matrix::to_string(vals)); 
+    bassert_eq (Matrix::to_string(vals), correct_str); 
+    // Matrix::to_string(vals) == correct_str, "1 * 2 * ... * 59 = "s + correct_str + ",\n\tbut actually: " + Matrix::to_string(vals)); 
 }
