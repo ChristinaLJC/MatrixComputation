@@ -12,12 +12,6 @@ namespace Matrix {
     template <typename T> 
     using DefaultAllocatorVector = std::vector<T, std::allocator<T>>; 
 
-    // template <typename T, typename V> 
-    // concept CanCompSize = requires {
-    //     { std::declval<T>().size() != std::declval<V>().size() } -> std::convertible_to<bool>; 
-    //     { std::declval<T>().size() == std::declval<V>().size() } -> std::convertible_to<bool>; 
-    // }; 
-
     template <typename T, typename V> 
     struct IsCanCompSize {
         template <typename U = T, typename U2 = V, typename = std::enable_if_t< 
@@ -35,7 +29,6 @@ namespace Matrix {
         typename... Useless1, nullptr_t = nullptr, typename... Useless2> 
     auto add(LhsContainer<LhsType, Useless1...> const &lhs_matrix, RhsContainer<RhsType, Useless2...> const &rhs_matrix) -> 
         std::enable_if_t < 
-//      CanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>, 
         IsCanCompSize<LhsContainer<LhsType, Useless1...>, RhsContainer<RhsType, Useless2...>>::value, 
         Container<typename ResultTypeImpl<LhsType, RhsType>::type> 
         >
