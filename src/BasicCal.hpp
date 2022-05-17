@@ -14,12 +14,17 @@ namespace Matrix {
         PNumber multi(PNumber const &, PNumber const &); 
         std::pair<PNumber, PNumber> div(PNumber const &, PNumber const &); 
 
-        PNumber &div_u32_then_eq(PNumber &, uint32_t, uint32_t *); 
+        PNumber &div_u32_then_eq(PNumber &, uint32_t, uint32_t * = nullptr); 
         PNumber &add_u32_then_eq(PNumber &, uint32_t); 
         PNumber &mul_u32_then_eq(PNumber &, uint32_t); 
 
+        PNumber &add_pn_then_eq(PNumber &, PNumber const &);
+        PNumber &mut_pn_then_eq(PNumber &, PNumber const &); 
+        PNumber &div_pn_then_eq(PNumber &, PNumber const &, PNumber * = nullptr); 
+        
         std::string to_string(PNumber const &); 
         std::string to_hex_string(PNumber const &); 
+        std::string to_bin_string(PNumber const &); 
 
         inline PNumber &div_u32_then_eq(PNumber &self, uint32_t to_div, uint32_t *remainder) {
             auto length = self.size(); 
@@ -88,6 +93,41 @@ namespace Matrix {
             return self; 
         }
 
+        inline PNumber &add_pn_then_eq(PNumber &self, PNumber const &rhs) {
+            size_t i {}; 
+            uint64_t cache {}; 
+            for (;;++i) {
+                try {
+                    cache += self.at(i) + rhs.at(i); 
+                    self.at(i) = cache; 
+                    cache >>= 32; 
+                } catch (std::out_of_range const &) {
+                    break; 
+                }
+            }
+            if (i < self.size()) {
+                while (cache) {
+                    cache += self.at(i); 
+                    self.at(i) = cache; 
+                    cache >>= 32; 
+                    ++i; 
+                    if (self.size() == i) {
+                        self.push_back(cache); 
+                        break; 
+                    }
+                }
+            } else {
+                while (i < rhs.size()) {
+                    cache += rhs.at(i); 
+                    self.push_back(cache); 
+                    cache >>= 32;
+                }
+                if (cache) 
+                    self.push_back(cache); 
+            }
+            return self;
+        }
+
         inline std::string to_string (PNumber const &self) {
             PNumber val = self; 
             std::vector<char> strs {}; 
@@ -124,6 +164,23 @@ namespace Matrix {
             while (effect_position) {
                 result << std::setw(8); 
                 result << self.at(--effect_position); 
+            }
+            return result.str(); 
+        }
+
+        inline std::string to_bin_string(PNumber const &self) {
+            size_t effect_position = self.size(); 
+            for (; effect_position && !self.at(effect_position-1); --effect_position) {
+            }
+            if (!effect_position) {
+                return "0b0"; 
+            }
+            std::stringstream result; 
+            result << "0b" << std::bitset<32>(self.at(--effect_position)); 
+            result << std::setfill('0'); 
+            while (effect_position) {
+                result << std::setw(32); 
+                result << std::bitset<32>(self.at(--effect_position));
             }
             return result.str(); 
         }

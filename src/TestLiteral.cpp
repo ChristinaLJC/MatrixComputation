@@ -28,8 +28,9 @@ TEST_METHOD {
 
 TEST_METHOD {
     using namespace Mx; 
-    auto v = 777_pn; 
-    for (auto i = 0; i < 19; ++i)
-        mul_u32_then_eq(v, 777); 
-    bassert_eq_actual_expect(to_string(v), ""); 
+    // What's the value of factorial of 20. 
+    auto v = 1_pn; 
+    for (auto i = 1; i <= 20; ++i) 
+        mul_u32_then_eq(v, i);
+    bassert_eq_actual_expect(to_string(v), "2432902008176640000"); 
 }
