@@ -149,3 +149,75 @@ TEST_METHOD {
     auto &&plus = add(x, y); 
     bassert (plus == std::vector{3, 6, 3}, "{1,2,3} + {2,4} should equals {3,6,3}. ");   
 }
+
+// This method is powered by Huang Haonan 
+TEST_METHOD{
+    std::vector<uint32_t> vals1 {0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF};
+    std::vector<uint32_t> vals2 {1};
+    if (vals1.size() < vals2.size())
+        std::swap(vals1, vals2);
+
+    std::vector<uint32_t> result = vals1;
+
+    uint64_t remain = {};
+    for (uint32_t i = 0; i < vals1.size(); ++i) {
+        if (i < vals2.size())
+            remain += (uint64_t) vals1.at(i) + vals2.at(i);
+        else remain += (uint64_t) vals1.at(i);
+        result.at(i) = remain & 0xFFFFFFFF;
+        remain >>= 32;
+    };
+    if (remain > 0)
+        result.push_back(remain);
+    auto show = [] (auto &to_show_vec) {
+        std::stringstream to_show_str;
+        to_show_str << "0x";
+        auto &&it = to_show_vec.crbegin();
+        // to_show_str.setw(8);
+        to_show_str << std::hex;
+        to_show_str << *it;
+        for (++it; it != to_show_vec.crend(); ++it) {
+            to_show_str << std::setfill('0');
+            to_show_str << std::setw(8);
+            to_show_str << *it;
+        }
+        return to_show_str.str();
+    };
+
+    using std::literals::operator ""s;
+    bassert (false, "0 + 1 = "s + show(result));
+};
+
+// This method is powered by Huang Haonan 
+TEST_METHOD {
+    std::vector<uint32_t> vals {101};
+    uint32_t di = 7;
+
+    uint64_t remain {};
+    std::vector<uint32_t> quotient {};
+    for (uint32_t i = vals.size()-1; i != 0xFFFFFFFF; i--){
+        remain += vals.at(i);
+        quotient.push_back(remain / di);
+        remain %= di;
+        remain <<= 32;
+    }
+    quotient = std::vector(quotient.rbegin(), quotient.rend()); 
+    auto show = [] (auto &to_show_vec) {
+        bassert(to_show_vec.size(), "Number shouldn't equals 0. "); 
+       std::stringstream to_show_str;
+       to_show_str << "0x";
+       auto &&it = to_show_vec.crbegin();
+       // to_show_str.setw(8);
+       to_show_str << std::hex;
+       to_show_str << *it;
+       for (++it; it != to_show_vec.crend(); ++it) {
+           to_show_str << std::setfill('0');
+           to_show_str << std::setw(8);
+           to_show_str << *it;
+       }
+       return to_show_str.str();
+    };
+
+    using std::literals::operator ""s;
+    bassert (false, "101 / 7= "s + show(quotient));
+}
