@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <array>
+#include <bitset> 
 #include <chrono>
 #include <codecvt> 
 #include <cstddef>
