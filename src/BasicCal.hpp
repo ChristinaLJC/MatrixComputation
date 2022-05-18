@@ -11,129 +11,30 @@ namespace Matrix {
 
         typedef std::vector<uint32_t> PNumber; 
 
-        PNumber add(PNumber const &, PNumber const &); 
-        std::pair<PNumber, PNSymbol> minus(PNumber const &, PNumber const &); 
-        PNumber multi(PNumber const &, PNumber const &); 
-        std::pair<PNumber, PNumber> div(PNumber const &, PNumber const &); 
+        PNumber add_pn(PNumber const &, PNumber const &); 
+        std::pair<PNumber, PNSymbol> minus_pn(PNumber const &, PNumber const &); 
+        PNumber mul_pn(PNumber const &, PNumber const &); 
+        std::pair<PNumber, PNumber> div_pn(PNumber const &, PNumber const &); 
+
+        PNumber &mul_pn_then_eq(PNumber &, PNumber const &);
 
         PNumber &div_u32_then_eq(PNumber &, uint32_t, uint32_t * = nullptr); 
         PNumber &add_u32_then_eq(PNumber &, uint32_t); 
         PNumber &mul_u32_then_eq(PNumber &, uint32_t); 
 
+        uint32_t mod_v_2(PNumber const &); 
+
+        PNumber &trim(PNumber &); 
+
         PNumber &add_pn_then_eq(PNumber &, PNumber const &);
         PNumber &mut_pn_then_eq(PNumber &, PNumber const &); 
         PNumber &div_pn_then_eq(PNumber &, PNumber const &, PNumber * = nullptr); 
+
+        bool is_zero(PNumber const &); 
         
         std::string to_string(PNumber const &); 
         std::string to_hex_string(PNumber const &); 
         std::string to_bin_string(PNumber const &); 
-
-        inline PNumber &div_u32_then_eq(PNumber &self, uint32_t to_div, uint32_t *remainder) {
-            auto length = self.size(); 
-            uint64_t cache {}; 
-            bool can_pop = true; 
-            for (auto k = length; k; --k) {
-                cache = (cache << 32) + self.at(k-1); 
-                self.at(k-1) = cache / to_div; 
-                if (can_pop) {
-                    if (self.at(k-1)) {
-                        can_pop = false; 
-                    } else {
-                        self.pop_back(); 
-                    }
-                } 
-                cache %= to_div;
-            }
-            if (remainder)
-                *remainder = cache;  
-            return self; 
-        }
-
-        inline PNumber &add_u32_then_eq(PNumber &self, uint32_t to_add) {
-            if (self.size() == 0) {
-                if (to_add)
-                    self.push_back(to_add); 
-                return self; 
-            }
-            uint64_t cache {to_add};
-            for (auto &&v: self) {
-                cache += v; 
-                v = cache & 0xFFFFFFFF; 
-                cache >>= 32; 
-                if (!cache)     
-                    break; 
-            }
-            if (cache) 
-                self.push_back(cache); 
-            if (cache >> 32) {
-                using std::literals::operator""s; 
-                lassert (false, "PNumber add a u32 but meets a overflow remain cache: "s + std::to_string(cache) + ". ");
-            }
-            return self; 
-        }
-
-        inline PNumber &mul_u32_then_eq(PNumber &self, uint32_t to_multiply) {
-            if (self.size() == 0) 
-                return self; 
-            if (to_multiply == 0) {
-                self.clear(); 
-                return self; 
-            }
-            uint64_t cache {}; 
-            for (auto &&v: self) {
-                cache += (uint64_t ) v * to_multiply; 
-                v = cache & 0xFFFFFFFF; 
-                cache >>= 32; 
-            }
-            if (cache) 
-                self.push_back(cache); 
-            if (cache >> 32) {
-                using std::literals::operator""s; 
-                lassert (false, "PNumber multiply a u32 but meets a overflow remain cache: "s + 
-                    std::to_string(cache) + ". ");
-            }
-            return self; 
-        }
-
-        inline PNumber &add_pn_then_eq(PNumber &self, PNumber const &rhs) {
-            size_t i {}; 
-            uint64_t cache {}; 
-            if (self.size() <= rhs.size()) {
-                for (; i < self.size(); ++i) {
-                    cache += self.at(i); 
-                    cache += rhs.at(i); 
-                    self.at(i) = cache; 
-                    cache >>= 32; 
-                }
-                for (; i < rhs.size(); ++i) {
-                    cache += rhs.at(i); 
-                    self.push_back(cache); 
-                    cache >>= 32; 
-                }
-                if (cache) {
-                    lassert (cache <= 0xFFFFFFFF, "Cache shouldn't larger than 0xFFFFFFFF in addition pn operation. ");
-                    self.push_back(cache);
-                }
-                return self; 
-            } else {
-                for (; i < rhs.size(); ++i) {
-                    cache += self.at(i); 
-                    cache += rhs.at(i); 
-                    self.at(i) = cache; 
-                    cache >>= 32; 
-                }
-                for (; i < self.size() && cache; ++i) {
-                    cache += self.at(i); 
-                    self.at(i) = cache; 
-                    cache >>= 32; 
-                }
-                if (cache) {
-                    lassert (cache <= 0xFFFFFFFF, "Cache shouldn't larger than 0xFFFFFFFF in addition pn operation. ");
-                    self.push_back(cache);
-                }
-                return self; 
-            }
-        }
 
         inline std::string to_string (PNumber const &self) {
             PNumber val = self; 
@@ -334,3 +235,5 @@ namespace Matrix {
         }
     }
 }
+
+#include "HighPrecisionSupport.hpp"

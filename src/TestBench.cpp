@@ -74,7 +74,7 @@ void helper(T &in) {
 #define TEST_METHOD template<> void test<__COUNTER__>()
 
 #ifndef TEST_FILE
-#error Please use -D to define the test file. Suggested: -D TEST_FILE=\"{your file path}\". Demo: TEST_FILE=\"test.cpp\"
+#error Please use -D to define the test file. // Suggested: -D TEST_FILE=\"{your file path}\". Demo: TEST_FILE=\"test.cpp\"
 #else 
 #include TEST_FILE
 #endif
@@ -164,10 +164,10 @@ std::wstring get_from_result(auto &results) {
         size_t cnt {}; 
         for (auto &i : results) {
             if (auto p = std::get_if<std::pair<double, std::vector<std::string>>>(&i); p) {
-                print_out_message << '\t' << cnt << L": 花费时间 " << std::get<double>(*p) << " ms. \n"; 
+                print_out_message << '\t' << cnt << L": 花费时间 " << std::get<double>(*p) * 1e3 << " ms. \n"; 
                 auto &&infos = std::get<std::vector<std::string>>(*p); 
                 if (infos.size()) {
-                    print_out_message << L"\t运行过程输出：\n\t"; 
+                    print_out_message << L"\n\t运行过程输出：\n\t"; 
                     for (auto &&to_out: infos) {
                         print_out_message << std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(std::move(to_out)) << L'\n'; 
                     }
