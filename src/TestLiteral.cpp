@@ -32,6 +32,8 @@ TEST_METHOD {
     auto v = 1_pn; 
     for (auto i = 1; i <= 20; ++i) 
         mul_u32_then_eq(v, i);
+    using std::literals::operator""s; 
+    println("1 * 2 * ... * 20 = "s + to_string(v));
     bassert_eq_actual_expect(to_string(v), "2432902008176640000"); 
 }
 
