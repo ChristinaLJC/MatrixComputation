@@ -1,5 +1,7 @@
 #include "std.hpp"
 
+#include "MatrixPrelude.hpp"
+
 namespace Matrix {
     inline namespace Prelude {
 
@@ -65,7 +67,7 @@ namespace Matrix {
                 self.push_back(cache); 
             if (cache >> 32) {
                 using std::literals::operator""s; 
-                throw std::logic_error("PNumber add a u32 but meets a overflow remain cache: "s + std::to_string(cache) + ". ");
+                lassert (false, "PNumber add a u32 but meets a overflow remain cache: "s + std::to_string(cache) + ". ");
             }
             return self; 
         }
@@ -87,7 +89,7 @@ namespace Matrix {
                 self.push_back(cache); 
             if (cache >> 32) {
                 using std::literals::operator""s; 
-                throw std::logic_error("PNumber multiply a u32 but meets a overflow remain cache: "s + 
+                lassert (false, "PNumber multiply a u32 but meets a overflow remain cache: "s + 
                     std::to_string(cache) + ". ");
             }
             return self; 
@@ -96,36 +98,41 @@ namespace Matrix {
         inline PNumber &add_pn_then_eq(PNumber &self, PNumber const &rhs) {
             size_t i {}; 
             uint64_t cache {}; 
-            for (;;++i) {
-                try {
-                    cache += self.at(i) + rhs.at(i); 
+            if (self.size() <= rhs.size()) {
+                for (; i < self.size(); ++i) {
+                    cache += self.at(i); 
+                    cache += rhs.at(i); 
                     self.at(i) = cache; 
                     cache >>= 32; 
-                } catch (std::out_of_range const &) {
-                    break; 
                 }
-            }
-            if (i < self.size()) {
-                while (cache) {
+                for (; i < rhs.size(); ++i) {
+                    cache += rhs.at(i); 
+                    self.push_back(cache); 
+                    cache >>= 32; 
+                }
+                if (cache) {
+                    lassert (cache <= 0xFFFFFFFF, "Cache shouldn't larger than 0xFFFFFFFF in addition pn operation. ");
+                    self.push_back(cache);
+                }
+                return self; 
+            } else {
+                for (; i < rhs.size(); ++i) {
+                    cache += self.at(i); 
+                    cache += rhs.at(i); 
+                    self.at(i) = cache; 
+                    cache >>= 32; 
+                }
+                for (; i < self.size() && cache; ++i) {
                     cache += self.at(i); 
                     self.at(i) = cache; 
                     cache >>= 32; 
-                    ++i; 
-                    if (self.size() == i) {
-                        self.push_back(cache); 
-                        break; 
-                    }
                 }
-            } else {
-                while (i < rhs.size()) {
-                    cache += rhs.at(i); 
-                    self.push_back(cache); 
-                    cache >>= 32;
+                if (cache) {
+                    lassert (cache <= 0xFFFFFFFF, "Cache shouldn't larger than 0xFFFFFFFF in addition pn operation. ");
+                    self.push_back(cache);
                 }
-                if (cache) 
-                    self.push_back(cache); 
+                return self; 
             }
-            return self;
         }
 
         inline std::string to_string (PNumber const &self) {
@@ -136,7 +143,7 @@ namespace Matrix {
                 div_u32_then_eq(val, 10, &wait); 
                 if (wait > 10) {
                     using std::literals::operator""s; 
-                    throw std::logic_error("Parse a high precision number meets a number out of domain: "s + std::to_string(wait)); 
+                    lassert (false, "Parse a high precision number meets a number out of domain: "s + std::to_string(wait)); 
                 }
                 strs.push_back(wait + '0'); 
             }
@@ -207,19 +214,16 @@ namespace Matrix {
                                 continue; 
                             }
                             if (v >= 'A' && v <= 'F') {
-                                if (is_capitalize.has_value() && !is_capitalize.value()) {
-                                    throw std::logic_error("Attempt to parse a hexdecimal value but meets a error character: "s 
-                                        + v + ". ");
-                                }
+                                lassert (!is_capitalize.has_value() || is_capitalize.value(), "Attempt to parse a hexdecimal value but meets a error character: "s 
+                                    + v + ". ");
                                 is_capitalize = true; 
                                 v = v - 'A' + 10; 
                                 continue; 
                             }
                             if (v >= 'a' && v <= 'f') {
-                                if (is_capitalize.has_value() && is_capitalize.value()) {
-                                    throw std::logic_error("Attempt to parse a hexdecimal value but meets a error character: "s 
+                                lassert (!is_capitalize.has_value() || !is_capitalize.value(), 
+                                    "Attempt to parse a hexdecimal value but meets a error character: "s 
                                         + v + ". "); 
-                                }
                                 is_capitalize = false; 
                                 v = v - 'a' + 10; 
                                 continue; 
@@ -228,8 +232,8 @@ namespace Matrix {
                                 v = 16; 
                                 continue; 
                             }
-                            throw std::logic_error("Attempt to parse a hexdecimal value but meets a error character: "s 
-                                + v + ". ");
+                            lassert (false, "Attempt to parse a hexdecimal value but meets a error character: "s 
+                                + v + ". "); 
                         }
 
                         len_index = 0; 
@@ -258,8 +262,8 @@ namespace Matrix {
                                 v = 2; 
                                 continue; 
                             }
-                            throw std::logic_error("Attempt to parse a binary value, but meets an error character: "s + 
-                                v + ". ");
+                            lassert (false, "Attempt to parse a binary value, but meets an error character: "s + 
+                                v + ". "); 
                         }
 
                         len_index = 0; 
@@ -288,8 +292,8 @@ namespace Matrix {
                                 v = 8; 
                                 continue; 
                             }
-                            throw std::logic_error("Attempt to parse a octal value, but meets an error character: "s + 
-                                v + ". ");
+                            lassert (false, "Attempt to parse a octal value, but meets an error character: "s + 
+                                v + ". "); 
                         }
                         flag = false; 
                         for (auto &&v: ar) {
@@ -312,7 +316,7 @@ namespace Matrix {
                             v = 10; 
                             continue; 
                         }
-                        throw std::logic_error("Meets a confusing char in literal: "s + v + ". "); 
+                        lassert (false, "Meets a confusing char in literal: "s + v + ". "); 
                     } else {
                         v = v - '0'; 
                     }

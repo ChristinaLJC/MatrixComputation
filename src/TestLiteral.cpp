@@ -34,3 +34,15 @@ TEST_METHOD {
         mul_u32_then_eq(v, i);
     bassert_eq_actual_expect(to_string(v), "2432902008176640000"); 
 }
+
+TEST_METHOD {
+    using namespace Mx; 
+    auto v = 1_pn; 
+    auto sum = 0_pn; 
+    for (auto i = 1; i <= 20; ++i) {
+        mul_u32_then_eq(v, i); 
+        add_pn_then_eq(sum, v); 
+    }
+    using std::literals::operator""s; 
+    println("1 + 1 * 2 + ... + 1 * --- * 20 = "s + to_string(sum));
+}

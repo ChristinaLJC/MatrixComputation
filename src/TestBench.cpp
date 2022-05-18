@@ -41,6 +41,12 @@ void bassert_eq(T &&t, V &&v) {
     }
 }
 
+thread_local static std::vector<std::string> infos; 
+
+void println(auto &&to_print) {
+    infos.push_back(std::forward<decltype(to_print)>(to_print));
+}
+
 template <typename T, typename V> 
 void bassert_eq_actual_expect(T &&t, V &&v) {
     bassert_eq(std::forward<T>(t), std::forward<V>(v));
@@ -54,11 +60,12 @@ void helper(T &in) {
     if constexpr (s > 0) {
         if constexpr (s > 1)
             helper<s-1>(in);
-        auto job = []() {
+        auto job = []() -> std::pair<double, std::vector<std::string>>{
             auto begin = std::chrono::high_resolution_clock::now(); 
             test<s-1>(); 
             return 
-                std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin).count() / 1e9; 
+                {std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - begin).count() / 1e9, 
+                    std::move(infos)}; 
         }; 
         in.push_back(std::async(job));
     }
@@ -78,7 +85,8 @@ size_t constexpr END_TEST_NUMBERS = __COUNTER__;
 #define TIME_OUT 3s 
 #endif
 
-std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertError, double>> &results) {
+// std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertError, double>> &results) {
+std::wstring get_from_result(auto &results) {
 
     std::wstringstream print_out_message; 
 
@@ -90,9 +98,9 @@ std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertErro
     for (auto &it: results) {
         if (auto fail_sit = std::get_if<AssertError>(&it); fail_sit) {
             ++fails; 
-        } else if (auto succ_sit = std::get_if<double>(&it); succ_sit) {
+        } else if (auto succ_sit = std::get_if<std::pair<double, std::vector<std::string>>>(&it); succ_sit) {
             ++successful; 
-            average_time += *succ_sit;
+            average_time += std::get<double>(*succ_sit);
         }
     }
 
@@ -151,11 +159,30 @@ std::wstring get_from_result(std::vector<std::variant<std::monostate, AssertErro
     print_out_message << L'\n' << L'\n';
     print_out_message << L"----------------------------------------------------"; 
     print_out_message << L'\n' << L'\n';
+    {
+        print_out_message << L"成功通过的测试点：\n\n";  
+        size_t cnt {}; 
+        for (auto &i : results) {
+            if (auto p = std::get_if<std::pair<double, std::vector<std::string>>>(&i); p) {
+                print_out_message << '\t' << cnt << L": 花费时间 " << std::get<double>(*p) << " ms. \n"; 
+                auto &&infos = std::get<std::vector<std::string>>(*p); 
+                if (infos.size()) {
+                    print_out_message << L"\t运行过程输出：\n\t"; 
+                    for (auto &&to_out: infos) {
+                        print_out_message << std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(std::move(to_out)) << L'\n'; 
+                    }
+                }
+                print_out_message << L'\n'; 
+            }
+            ++cnt; 
+        }
+    }
     return print_out_message.str(); 
 }
 
-void deal_result(std::vector<std::variant<std::monostate, AssertError, double>> &results) {
-    auto message = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(get_from_result(results)); 
+// void deal_result(std::vector<std::variant<std::monostate, AssertError, double>> &results) {
+void deal_result (auto &results) {
+    auto message = std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().to_bytes(get_from_result(results)); 
     for (auto i: message) {
         using namespace std::literals::chrono_literals; 
         // std::wcout << int(i) << ' '; 
@@ -167,7 +194,7 @@ void deal_result(std::vector<std::variant<std::monostate, AssertError, double>> 
 }
 
 int main() {
-    std::vector<std::future<double>> asyncs; 
+    std::vector<std::future<std::pair<double, std::vector<std::string>>>> asyncs; 
     asyncs.reserve(END_TEST_NUMBERS); 
 
     helper<END_TEST_NUMBERS>(asyncs); 
@@ -175,7 +202,7 @@ int main() {
     using namespace std::literals::chrono_literals; 
     auto until = std::chrono::high_resolution_clock::now() + TIME_OUT;
 
-    std::vector<std::variant<std::monostate, AssertError, double>> results (asyncs.size()); 
+    std::vector<std::variant<std::monostate, AssertError, std::pair<double, std::vector<std::string>>>> results (asyncs.size()); 
 
     while (std::chrono::high_resolution_clock::now() <= until) {
         bool flag = true; 
@@ -184,7 +211,7 @@ int main() {
                 // Find a flag do not finish well! 
                 if (auto state = asyncs.at(i).wait_for(0s); state == std::future_status::ready) {
                     try {
-                        results.at(i) = asyncs.at(i).get(); 
+                        results.at(i) = std::move(asyncs.at(i).get()); 
                     } catch (AssertError &error) {
                         results.at(i).emplace<AssertError>(std::move(error)); 
                     } catch (std::exception &run_error) {
