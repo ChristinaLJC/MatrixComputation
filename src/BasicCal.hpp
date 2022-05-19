@@ -237,6 +237,34 @@ namespace Matrix {
             return result; 
         }
     }
+
+    namespace beta {
+        inline vector<uint32_t> multi(vector<uint32_t> const &a, vector<uint32_t> const &b) {  // b * a
+            vector<vector<uint64_t>> middle;
+            for (int i = 0; i < a.size(); ++i) {
+                vector<uint64_t> term;
+                for (int j = 0; j < b.size(); ++j) {
+                    term.push_back(b[j] * a[i]);
+                }
+                middle.push_back(term);
+            }
+
+            vector<uint32_t> result;
+            uint64_t temp = 0;
+            for (int i = 0; i < middle.size(); ++i) {
+                for (int j = 0; j <= i; ++j) {
+                    temp += middle[j][i-j];
+                    while (temp > 0xffffffff) {
+                        result.push_back(0xffffffff);
+                        temp -= 0xffffffff;
+                    }
+                }
+            }
+
+            return result;
+
+        }
+    }
 }
 
 #include "HighPrecisionSupport.hpp"
