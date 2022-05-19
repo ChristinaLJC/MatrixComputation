@@ -239,6 +239,7 @@ namespace Matrix {
     }
 
     namespace beta {
+        using std::vector; 
         inline vector<uint32_t> multi(vector<uint32_t> const &a, vector<uint32_t> const &b) {  // b * a
             vector<vector<uint64_t>> middle;
             for (int i = 0; i < a.size(); ++i) {

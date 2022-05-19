@@ -5,8 +5,6 @@ namespace P {
     using namespace std::literals; 
 }
 
-#define Use using namespace 
-
 TEST_METHOD {
 
     Use P; 
@@ -46,6 +44,9 @@ TEST_METHOD {
     
     println(to_string(ans));
 
-    std::vector<uint32_t> result;
+    auto result = P::beta::multi(left_hs, right_hs);
 
+    println(to_string(result)); 
+
+    bassert_eq_actual_expect(to_string(result), to_string(ans));
 }
