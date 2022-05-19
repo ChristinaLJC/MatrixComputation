@@ -74,7 +74,7 @@ void helper(T &in) {
 #define TEST_METHOD template<> void test<__COUNTER__>()
 
 #ifndef TEST_FILE
-#error Please use -D to define the test file. Suggested: -D TEST_FILE=\"{your file path}\". Demo: TEST_FILE=\"test.cpp\"
+#error Please use -D to define the test file. /* Suggested: -D TEST_FILE=\"{your file path}\". Demo: TEST_FILE=\"test.cpp\" */
 #else 
 #include TEST_FILE
 #endif
