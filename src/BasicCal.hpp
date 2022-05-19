@@ -36,6 +36,9 @@ namespace Matrix {
         std::string to_hex_string(PNumber const &); 
         std::string to_bin_string(PNumber const &); 
 
+        template <char...> 
+        PNumber operator "" _pn(); 
+
         inline std::string to_string (PNumber const &self) {
             PNumber val = self; 
             std::vector<char> strs {}; 
@@ -93,7 +96,7 @@ namespace Matrix {
             return result.str(); 
         }
 
-        template <char ...numbers> 
+        template <char... numbers> 
         inline PNumber operator "" _pn () {
             using std::literals::operator""s; 
             auto ar = std::array<char, sizeof...(numbers)> {numbers...};

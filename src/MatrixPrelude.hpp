@@ -1,5 +1,10 @@
 #include "std.hpp"
 
+#ifdef Use 
+#undef Use 
+#endif
+#define Use using namespace 
+
 namespace Matrix { 
     inline namespace Prelude {
         class LAssertError: public std::logic_error {
