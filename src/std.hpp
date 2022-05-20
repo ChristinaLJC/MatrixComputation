@@ -19,7 +19,6 @@
 #include <source_location> 
 #endif
 
-#include <stdexcept>
 #include <string> 
 #include <sstream> 
 #include <thread>
@@ -36,12 +35,3 @@ using i64 = int64_t;
 using u16 = uint16_t;  
 using u32 = uint32_t;  
 using u64 = uint64_t;  
-
-constexpr bool logical_error_detected = 
-    #ifdef RELEASE 
-        true
-    #else 
-        false 
-    #endif 
-; 
-
