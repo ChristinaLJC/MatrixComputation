@@ -1,23 +1,24 @@
 namespace Matrix::HighPrecision {
     
-    // to_string for uint128_t
-    std::string to_string(uint128_t const &val) {
-        std::array<char, 30> cache; 
-        size_t index {}; 
-        u128 tmp = val; 
-        while (tmp) {
-            // cache[index] = tmp % 10
-            u32 remain; 
-            div_u32_then_eq(tmp, 10, &remain); 
-            cache.at(index++) = remain + '0'; 
+    namespace uint128_t {
+        // to_string for uint128_t
+        inline std::string to_string(u128 const &val) {
+            std::array<char, 30> cache; 
+            size_t index {}; 
+            u128 tmp = val; 
+            while (tmp) {
+                // cache[index] = tmp % 10
+                u32 remain; 
+                div_u32_then_eq(tmp, 10, &remain); 
+                cache.at(index++) = remain + '0'; 
+            }
+            size_t start {}; 
+            while (start + 1 < index) {
+                std::swap(cache.at(start++), cache.at(index---1)); 
+            }
+            return std::string (reinterpret_cast<char*>(&cache)); 
         }
-        size_t start {}; 
-        while (start + 1 < index) {
-            std::swap(cache.at(start++), cache.at(index---1)); 
-        }
-        return std::string (reinterpret_cast<char*>(&cache)); 
     }
-
 
     // to_string for PNumber
     inline std::string to_string (PNumber const &self) {

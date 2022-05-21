@@ -1,4 +1,7 @@
-#include "BasicCal.hpp"
+#include "Alias.hpp"
+#include "Matrix.hpp"
+#include "MException.hpp"
+#include "MHighPrecision.hpp"
 
 namespace Mx = Matrix; 
 

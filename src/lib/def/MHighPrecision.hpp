@@ -19,11 +19,13 @@ namespace Matrix::HighPrecision {
 
     class PrecisionNumber; 
 
-    enum class PNSymbol: unsigned char {
-        POSITIVE, NEGATIVE, ZERO
-    };
-
     typedef std::vector<uint32_t> PNumber; 
+
+    /** 
+     * PSymbol is the wrong design for us. 
+     * Plan to delete it! 
+     */ 
+    class PNSymbol; 
 
     // all basic calculations of PNumber
 
@@ -54,11 +56,8 @@ namespace Matrix::HighPrecision {
 
     template <char...> 
     PNumber operator "" _pn(); 
-
-
-
-
 }
 
-#include "realization/ParseToString.hpp"
+#include "realization/LiteralDefinition.hpp"
 #include "realization/u128Calculation.hpp"
+#include "realization/ParseToString.hpp"
