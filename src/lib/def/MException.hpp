@@ -57,4 +57,10 @@ namespace Matrix::Exception {
         using MatrixBaseException::MatrixBaseException; 
     }; 
 
+
+    class LAssertError: public std::logic_error {
+    public:
+        using std::logic_error::logic_error;
+    };
+
 }
