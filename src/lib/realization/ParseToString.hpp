@@ -1,5 +1,3 @@
-#pragma once 
-
 namespace Matrix::HighPrecision {
     
     // to_string for uint128_t
