@@ -23,7 +23,7 @@ namespace Matrix::HighPrecision::uint128_t {
          * The u32 value constructor, it can give a better optimization because we can reduce 
          *   one time of the right shift operations. 
          */ 
-        uint128_t(u32 val): values({val, }) {
+        uint128_t(u32 val): values({static_cast<u32>(val), }) {
         }
 
         /** 
@@ -31,7 +31,7 @@ namespace Matrix::HighPrecision::uint128_t {
          * 
          * It's a normal constructor to use for us. 
          */ 
-        uint128_t(u64 val): values({val, val >> 32, }) {
+        uint128_t(u64 val): values({static_cast<u32>(val), static_cast<u32>(val >> 32), }) {
         }
 
         /** 
