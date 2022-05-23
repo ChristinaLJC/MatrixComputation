@@ -25,6 +25,7 @@
 #include <thread>
 #include <tuple>
 #include <type_traits> 
+#include <utility> 
 #include <variant> 
 #include <vector> 
 
@@ -45,3 +46,18 @@ constexpr bool logical_error_detected =
     #endif 
 ; 
 
+/** 
+ * Though it quitely make sense to put these syntax grammar in 'Alias.hpp', but it's not enough convenient for us to use it. 
+ * 
+ * The better choice is that let's just include it everywhere! 
+ * 
+ * Similarly, be careful about the redefinition of this syntax macro. 
+ */ 
+#define Use using namespace 
+
+#ifndef __cpp_lib_void_t 
+namespace std {
+    template <typename ...> 
+    using void_t = void; 
+}
+#endif

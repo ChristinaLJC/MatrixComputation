@@ -58,6 +58,13 @@ namespace Matrix::Exception {
     }; 
 
 
+    /** 
+     * This class should be removed in the future! 
+     * 
+     * It do not inherit from BaseException. 
+     *
+     * @Deprecated
+     */
     class LAssertError: public std::logic_error {
     public:
         using std::logic_error::logic_error;
