@@ -3,5 +3,5 @@
 #include <experimental/simd> 
 
 int main() {
-    std::experimental::simd<int> simd_ins;
+    
 }

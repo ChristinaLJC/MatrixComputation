@@ -2,6 +2,7 @@
 
 #include <array>
 #include <bitset> 
+#include <cassert> 
 #include <chrono>
 #include <codecvt> 
 #include <cstddef>
@@ -37,14 +38,28 @@ using i64 = int64_t;
 using u16 = uint16_t;  
 using u32 = uint32_t;  
 using u64 = uint64_t;  
+using isize = ptrdiff_t; 
+using usize = size_t;  
 
-constexpr bool logical_error_detected = 
-    #ifdef RELEASE 
-        true
-    #else 
-        false 
-    #endif 
-; 
+/** 
+ * todo: 
+ * i128 & u128 are needed to realize! 
+ */ 
+
+/** 
+ * The const expression in compiling time for a detect & check operations. 
+ * 
+ * Use -D NDEBUG flag would open it and we can see everything! 
+ */ 
+namespace matrix {
+    constexpr bool logical_error_detected = 
+        #ifndef NDEBUG 
+            true
+        #else 
+            false 
+        #endif 
+    ; 
+}
 
 /** 
  * Though it quitely make sense to put these syntax grammar in 'Alias.hpp', but it's not enough convenient for us to use it. 
@@ -55,9 +70,12 @@ constexpr bool logical_error_detected =
  */ 
 #define Use using namespace 
 
+/** 
+ * If void_t trait isn't defined in std, we just supplement for it. 
+ */ 
 #ifndef __cpp_lib_void_t 
 namespace std {
-    template <typename ...> 
+    template <typename...> 
     using void_t = void; 
 }
 #endif
