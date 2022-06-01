@@ -45,6 +45,11 @@ namespace matrix::exception {
 #define STRING_INNER(x) #x
 #define STRING(x) STRING_INNER(x)
 
+// Use NDEBUG to drop all logical assertion in program. 
+#ifdef NDEBUG
+#define LASSERT(e) \
+    do { (void) sizeof (e); } while (0); 
+#else 
 #define LASSERT(expression) \
     do { \
         auto &&v = (expression); \
@@ -52,6 +57,7 @@ namespace matrix::exception {
             throw matrix::exception::MatrixLogicalError( __FILE__ ":" STRING(__LINE__) " logical-correct bool expression {" #expression "} fails! " ); \
         } \
     } while (0); 
+#endif 
 
 #define lassert LASSERT
 

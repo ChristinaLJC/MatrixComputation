@@ -7,6 +7,10 @@ In this library, except the basic integral types, we also define some other arit
 
 
 
+## Assertion Support 
+
+As you know that, assert is also quite a lot important ````
+
 ## Suggested Reference
 
 - https://docs.opencv.org/3.4/d3/d63/classcv_1_1Mat.html
