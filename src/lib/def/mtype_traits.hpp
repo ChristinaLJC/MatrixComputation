@@ -22,10 +22,10 @@ namespace matrix::type_traits {
             return std::to_string(a); 
         }; 
         if constexpr (decltype(type_traits::is_impl(to_string_trait_invoke)(v))::value) {
-            std::clog << "Enter the first branch! \n"; 
+            // std::clog << "Enter the first branch! \n"; 
             return to_string_trait_invoke(v); 
         } else if constexpr (decltype(type_traits::is_impl(std_to_string_output)(v))::value) {
-            std::clog << "Enter the second branch! \n"; 
+            // std::clog << "Enter the second branch! \n"; 
             return std_to_string_output(v); 
         }
         return "[Not Realize String Trait]"; 
