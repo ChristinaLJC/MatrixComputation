@@ -39,6 +39,9 @@ namespace matrix::exception {
     }; 
 }
 
+#include "def/mtype_traits.hpp"
+#include "def/mconstraints.hpp"
+
 #define STRING_INNER(x) #x
 #define STRING(x) STRING_INNER(x)
 
@@ -62,41 +65,24 @@ namespace matrix::exception {
 
 #define bassert BASSERT 
 
-namespace matrix::type_traits {
-    template <typename T> 
-    struct HasStdToString {
-        private: 
-            template <typename V = T, typename = std::void_t<decltype(std::to_string(std::declval<V>()))>> 
-            std::true_type static test(nullptr_t ); 
-            std::false_type static test(...); 
-        public: 
-            static bool constexpr value = decltype(test(nullptr))::value; 
-    }; 
-
-    template <typename T> 
-    auto constexpr has_std_to_string = HasStdToString<T>::value; 
-}
-
-namespace matrix {
-    template <typename T> 
-    std::string stringizing (T &&v) {
-        if constexpr (type_traits::has_std_to_string<T>) {
-            return std::to_string(v); 
-        } else {
-            return to_string(v); 
-        }
-    }
-}
-
 #define BASSERT_EQ(lhs, rhs) \
     do { \
         auto &&l = (lhs); \
         auto &&r = (rhs); \
         if (l != r) { \
-            std::string tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is '" + matrix::stringizing(l) \
-                + "' but rhs{" #rhs "} is '" + matrix::stringizing(r) + "'. "; \
+            std::string tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is '" + matrix::type_traits::From<std::decay_t<decltype(l)>>{}.from<std::string>(l) \
+                + "' but rhs{" #rhs "} is '" + matrix::type_traits::From<std::decay_t<decltype(r)>>{}.from<std::string>(r) + "'. "; \
             throw matrix::exception::MatrixAssertError(std::move(tmp)); \
         } \
     } while (0); 
 
 #define bassert_eq BASSERT_EQ
+
+#define BASSERT_IN(lhs, rhs) \
+    do { \
+        auto &&l = (lhs); \
+        decltype(auto) r = (rhs); \
+        matrix::constraints::helper::check(l, r); \
+    } while (0) 
+
+#define bassert_in BASSERT_IN 

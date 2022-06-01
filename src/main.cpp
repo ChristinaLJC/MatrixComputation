@@ -1,25 +1,9 @@
 #include "def/mexception.hpp"
-
-class BaseClass {
-    public: 
-    std::string name = "BaseClass."; 
-}; 
-
-class DerivedClass: public BaseClass {
-    public: 
-    int age = 21; 
-    DerivedClass() {
-        name = "DerviedClass"; 
-    }
-}; 
-
+#include "def/mconstraints.hpp"
 
 int main() {
-    BaseClass &&c = DerivedClass(); 
-    std::cout << "Get the address of the class instance: " 
-        << &c << '\n'; 
-    std::cout << "My name is " << c.name << '\n'; 
-    // LASSERT (false); 
-    bassert_eq ( 21 + 35, 66 ); 
-    // assert (false); 
+    bassert ("Hello World" != nullptr); 
+    bassert_eq (1 + 2 + 3 + 4 + 5, 15); 
+    bassert_in (9 * 11 * 13, LOWER_BOUND(1000) && UPPER_BOUND(2000) ); 
+    std::cout << "Pass!\n"; 
 }

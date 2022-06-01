@@ -1,7 +1,13 @@
 # MatrixComputation
 a lib for Matrix Computation, from CS205
 
-## Suggested Reference 
+## Integral Type Support
+
+In this library, except the basic integral types, we also define some other arithmetic types to better support the calculations. 
+
+
+
+## Suggested Reference
 
 - https://docs.opencv.org/3.4/d3/d63/classcv_1_1Mat.html
 - https://en.cppreference.com/w/cpp/utility/forward
@@ -83,4 +89,3 @@ The related test is written in **TestLiteral.cpp**.
 Actually, the name of the function is quitely explansive. The function named `add` shows the addition of two high precision instance, and of course return a new instance to express the sum. If you rejects this operation, *maybe considering it as a cumbersome thing*, the other choice for you is `add_pn_then_eq`. 
 
 Obviously, the substitution of them two are: `result = op_lhs + op_rhs`, and the second is `op_lhs += op_rhs`. 
-
