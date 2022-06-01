@@ -1,15 +1,58 @@
 # MatrixComputation
 a lib for Matrix Computation, from CS205
 
-## Integral Type Support
+
+
+## Library Support
+
+### Integral Type Support
 
 In this library, except the basic integral types, we also define some other arithmetic types to better support the calculations. 
 
+#### uint128_t
+
+#### uint_t
+
+#### integral_t
+
+### Assertion Support
+
+As you know that, assertion is a significantly important component in our developing. A good assertion support can effectively help us DEBUG the logical errors and other typos. 
+
+Therefore, we now define three types branch assertions for convenience when using in the testing framework. 
 
 
-## Assertion Support 
 
-As you know that, assert is also quite a lot important ````
+#### bassert
+
+The command `bassert` is a simple assertion command for us to test the assertion is correct or not at this moment. 
+
+It just simply receive only one bool expression and examine this value is `true` or not. 
+
+
+
+#### bassert_eq
+
+The command `bassert_eq` seems like the combination function invocations `bassert (lhs_exp == rhs_exp)`. 
+
+However, we determine to add this extra assert statement not because we're boring but we specify this assertion condition. 
+
+There are 2 important reasons for us to do it: 
+
+1. This situation is frequently happening so that a special grammar for it is important. 
+2. Determining a small case to implement is beneficial to us to have a deeper peek of the failure situation when it happens than the original assert statement. 
+
+
+
+#### bassert_in
+
+The command `bassert_in` is an assert statement to make sure some value in a bound! 
+
+Of course this assert statement would base on the comparing operators. 
+
+The limitation about the data type is quite loose, which means if you can make sure the comparison about them, you can use this command smoothly! 
+
+
 
 ## Suggested Reference
 
@@ -68,7 +111,7 @@ If you invoke this command but meet a mass code display, you can refer to these 
 - `chcp 65001`: Change your code in utf-8 format. 
 - `chcp 936`: Change your code in gbk format. (Maybe) 
 
-## Windows Support 
+## Windows Support
 
 If you are using powershell, maybe the program would not be executed correctly with '-D' flag. 
 You can use the command: `cmd.exe /c 'g++ -std=c++2a -D TEST_FILE=\"test.cpp\" TestBench.cpp'` to reach you aim indirectly. 

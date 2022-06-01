@@ -76,8 +76,8 @@ namespace matrix::exception {
         auto &&l = (lhs); \
         auto &&r = (rhs); \
         if (l != r) { \
-            std::string tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is '" + matrix::type_traits::From<std::decay_t<decltype(l)>>{}.from<std::string>(l) \
-                + "' but rhs{" #rhs "} is '" + matrix::type_traits::From<std::decay_t<decltype(r)>>{}.from<std::string>(r) + "'. "; \
+            std::string tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(l)>>{}.from<std::string>(l) \
+                + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(r)>>{}.from<std::string>(r) + ". "; \
             throw matrix::exception::MatrixAssertError(std::move(tmp)); \
         } \
     } while (0); 

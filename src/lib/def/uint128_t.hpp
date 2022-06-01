@@ -8,7 +8,6 @@ namespace matrix {
         using u128 = uint128_t; 
         class uint128_t : private std::array<u32, 4> {
             public: 
-
                 template <bool secure = false> 
                 u128 operator+ (u128 const &) const noexcept(!secure && logical_error_detected);  
                 template <bool secure = false> 
@@ -36,7 +35,6 @@ namespace matrix {
                 u128 operator% (u128) const noexcept (logical_error_detected); 
                 u64 operator% (u64) const noexcept(logical_error_detected); 
                 u32 operator% (u32) const noexcept(logical_error_detected); 
-
             private: 
                 struct GetByIndex {
                     template <size_t k> 

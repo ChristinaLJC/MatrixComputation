@@ -1,44 +1,11 @@
 #include "std.hpp" 
+
 #include "def/mexception.hpp"
-
-#ifdef __cpp_lib_source_location
-void bassert (bool bool_expression, std::string info = "", std::source_location const location = std::source_location::current()) {
-    if (!bool_expression) {
-        using namespace std::literals; 
-        throw matrix::exception::MatrixAssertError("file: "s + location.file_name() + '(' + location.line() 
-            + ':' + location.column() + ')' + ' ' + '\'' + location.function_name() + '\'' + ':'
-            + ' ' + info); 
-    }
-}
-#else 
-void bassert (bool bool_expression, std::string info = "") {
-    if (!bool_expression)
-        throw matrix::exception::MatrixAssertError(std::move(info)); 
-}
-#endif
-
-template <typename T, typename V> 
-void bassert_eq(T &&t, V &&v) {
-    if (t != v) {
-        std::stringstream error_info; 
-        error_info << "[Equivalent Assertion Fail: ] Expected: \""
-            << v 
-            << "\", Actual: \"" 
-            << t 
-            << "\". \n";
-        throw matrix::exception::MatrixAssertError(error_info.str());
-    }
-}
 
 thread_local static std::vector<std::string> infos; 
 
 void println(auto &&to_print) {
     infos.push_back(std::forward<decltype(to_print)>(to_print));
-}
-
-template <typename T, typename V> 
-void bassert_eq_actual_expect(T &&t, V &&v) {
-    bassert_eq(std::forward<T>(t), std::forward<V>(v));
 }
 
 template <size_t > 
