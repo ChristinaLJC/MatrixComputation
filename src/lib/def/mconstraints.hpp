@@ -104,5 +104,8 @@ namespace matrix::constraints {
 
 }
 
-#define LOWER_BOUND(expression) matrix::constraints::with_lower_bound(expression, "Fails with the lower bound constraints in " __FILE__ ":" STRING(__LINE__) "  the lower bound:'" #expression "'=")
-#define UPPER_BOUND(expression) matrix::constraints::with_upper_bound(expression, "Fails with the upper bound constraints in " __FILE__ ":" STRING(__LINE__) "  the upper bound:'" #expression "'=")
+#define LOWER_BOUND(expression) matrix::constraints::with_lower_bound(expression, "Fails with the lower bound constraints in " __FILE__ ":" STRING(__LINE__) "  the lower bound:'" #expression "' is ")
+#define UPPER_BOUND(expression) matrix::constraints::with_upper_bound(expression, "Fails with the upper bound constraints in " __FILE__ ":" STRING(__LINE__) "  the upper bound:'" #expression "' is ")
+
+#define lower_bound LOWER_BOUND
+#define upper_bound UPPER_BOUND 
