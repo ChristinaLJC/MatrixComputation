@@ -52,7 +52,7 @@ namespace matrix {
                 } else if constexpr (secure) {
                     // Cached shouldn't be greater than zero, or a overflow exception would happens! 
                     // todo: throw an overflow exception. 
-                    throw exception::MatrixOverflowException ("default"); 
+                    throw exception::MatrixOverflowException ("todo:default"); 
                 }
             }
         }
@@ -66,6 +66,7 @@ namespace matrix {
         }
 
         namespace helper {
+
             template <typename F, size_t v = 3> 
             void divide_and_equal(u128 &dividend, u32 divisor, u32 *remainder, u64 cached = 0) noexcept (!logical_error_detected) {
                 lassert (cached <= 0xFFFFFFFF); 
@@ -86,8 +87,8 @@ namespace matrix {
                 }
             }
 
-            template <typename F, u32 divisor, u32 *remainder, size_t v = 3> 
-            void divide_and_equal(u128 &dividend, u64 cached = 0) noexcept (!logical_error_detected) {
+            template <typename F, u32 divisor, size_t v = 3> 
+            void divide_and_equal(u128 &dividend, u32 *remainder, u64 cached = 0) noexcept (!logical_error_detected) {
                 lassert (cached <= 0xFFFFFFFF); 
                 cached += F{}.template operator()<v>(dividend); 
                 lldiv_t result = std::div((i64)cached, (i64)divisor); 
@@ -97,8 +98,8 @@ namespace matrix {
                 F{}.template operator()<v>(dividend) = result.quot; 
 
                 if constexpr (v) {
-                    divide_and_equal<F, divisor, remainder, v - 1>(dividend, result.rem); 
-                } else if constexpr (remainder) {
+                    divide_and_equal<F, divisor, v - 1>(dividend, remainder, result.rem); 
+                } else if (remainder) {
                     lassert (result.rem <= 0xFFFFFFFFLL); 
                     *remainder = result.rem; 
                 }
@@ -111,16 +112,19 @@ namespace matrix {
             return *this; 
         }
 
-        template <u32 divisor, u32 *remainder> 
-        u128 &u128::divide_and_equal() noexcept(!logical_error_detected) {
+        template <u32 divisor> 
+        u128 &u128::divide_and_equal(u32 *remainder) noexcept(!logical_error_detected) {
             static_assert (divisor); 
-            helper::divide_and_equal<GetByIndex, divisor, remainder>(*this); 
+            helper::divide_and_equal<GetByIndex, divisor>(*this, remainder); 
             return *this; 
+        }
+
+        u128::operator std::string() const noexcept(!logical_error_detected) {
+            return type_traits::From<u128>{}.from<std::string>(*this); 
         }
 
         // template <bool secure>
         // uint128_t operator- (u64) const noexcept(!secure && logical_error_detected) {
-
         // }
         // template <bool secure>
         // uint128_t operator- (u32) const noexcept(!secure && logical_error_detected); 
@@ -135,27 +139,60 @@ namespace matrix {
         // u32 operator% (u32) const noexcept(logical_error_detected); 
         // u64 operator% (u64) const noexcept(logical_error_detected); 
 
-    }
-
-    namespace helper {
-        std::string &reverse(std::string &s) noexcept {
-            if (s.size() <= 1) 
+        namespace helper {
+            std::string &reverse(std::string &s) noexcept {
+                if (s.size() <= 1) 
+                    return s; 
+                size_t i = 0; 
+                size_t end = s.size(); 
+                while (i + 1 < end) {
+                    std::swap(s[i], s[end-1]); 
+                    ++i; --end; 
+                }
                 return s; 
-            size_t i = 0; 
-            size_t end = s.size(); 
-            while (i + 1 < end) {
-                std::swap(s[i], s[end-1]); 
-                ++i; --end; 
             }
-            return s; 
-        }
-    }
 
-    template <>  
-    std::string u128::into() const {
-        std::string result; 
-        result.reserve(DECIMAL_LENGTH); 
-        return result; 
+            template <typename F, size_t index> 
+            bool constexpr is_not_zero(u128 const &self) noexcept {
+                return F{}.template operator()<index>(self); 
+            }
+
+            template <typename F, size_t up_index = 3> 
+            bool constexpr collect(u128 const &self) noexcept {
+                if (is_not_zero<F, up_index>(self)) 
+                    return true; 
+                if constexpr (up_index)
+                    return collect<F, up_index - 1>(self); 
+                else 
+                    return false; 
+            }
+        }
+
+        u128::operator bool() const noexcept {
+            return helper::collect<GetByIndex>(*this); 
+        }
+
+        template <>  
+        std::string u128::into() const {
+            std::string result; 
+            if (!*this){
+                result = "0"; 
+                return result; 
+            } 
+            result.reserve(DECIMAL_LENGTH); 
+            u128 tmp = *this; 
+            u32 remainder; 
+            constexpr u32 DIVISOR = 10; 
+            while (tmp) {
+                tmp.divide_and_equal<DIVISOR>(&remainder); 
+                // remainder would be greater than zero always, according to its type. 
+                lassert (remainder < 10); 
+                result += (char)('0' + remainder); 
+            }
+            helper::reverse(result); 
+            return result; 
+        }
+
     }
 }
 
