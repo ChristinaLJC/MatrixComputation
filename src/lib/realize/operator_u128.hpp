@@ -85,12 +85,39 @@ namespace matrix {
                     }
                 }
             }
+
+            template <typename F, u32 divisor, u32 *remainder, size_t v = 3> 
+            void divide_and_equal(u128 &dividend, u64 cached = 0) noexcept (!logical_error_detected) {
+                lassert (cached <= 0xFFFFFFFF); 
+                cached += F{}.template operator()<v>(dividend); 
+                lldiv_t result = std::div((i64)cached, (i64)divisor); 
+                
+                lassert (result.quot >= 0); 
+                lassert (result.quot <= 0xFFFFFFFFLL); 
+                F{}.template operator()<v>(dividend) = result.quot; 
+
+                if constexpr (v) {
+                    divide_and_equal<F, divisor, remainder, v - 1>(dividend, result.rem); 
+                } else if constexpr (remainder) {
+                    lassert (result.rem <= 0xFFFFFFFFLL); 
+                    *remainder = result.rem; 
+                }
+            }
+
         }
 
         u128 &u128::divide_and_equal(u32 divisor, u32 *remainder) noexcept (!logical_error_detected) {
             helper::divide_and_equal<GetByIndex>(*this, divisor, remainder); 
             return *this; 
         }
+
+        template <u32 divisor, u32 *remainder> 
+        u128 &u128::divide_and_equal() noexcept(!logical_error_detected) {
+            static_assert (divisor); 
+            helper::divide_and_equal<GetByIndex, divisor, remainder>(*this); 
+            return *this; 
+        }
+
         // template <bool secure>
         // uint128_t operator- (u64) const noexcept(!secure && logical_error_detected) {
 

@@ -45,6 +45,10 @@ namespace matrix {
                  * Not check of the divisor is zero! 
                  */ 
                 u128 &divide_and_equal(u32, u32 * = nullptr) noexcept(!logical_error_detected);
+
+                template <u32, u32 *> 
+                u128 &divide_and_equal() noexcept(!logical_error_detected); 
+
                 template <typename T> 
                 T into() const; 
             private: 
