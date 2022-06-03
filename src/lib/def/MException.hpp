@@ -52,8 +52,8 @@ namespace matrix::exception {
 #else 
 #define LASSERT(expression) \
     do { \
-        auto &&v = (expression); \
-        if (!v) { \
+        auto &&_v = (expression); \
+        if (!_v) { \
             throw matrix::exception::MatrixLogicalError( __FILE__ ":" STRING(__LINE__) " logical-correct bool expression {" #expression "} fails! " ); \
         } \
     } while (0); 
@@ -63,8 +63,8 @@ namespace matrix::exception {
 
 #define BASSERT(expression) \
     do { \
-        auto &&v = (expression); \
-        if (!v) { \
+        auto &&_v = (expression); \
+        if (!_v) { \
             throw matrix::exception::MatrixAssertError( __FILE__ ":" STRING(__LINE__) " assert expression {" #expression "} fails! " ); \
         } \
     } while (0); 
@@ -73,12 +73,12 @@ namespace matrix::exception {
 
 #define BASSERT_EQ(lhs, rhs) \
     do { \
-        auto &&l = (lhs); \
-        auto &&r = (rhs); \
-        if (l != r) { \
-            std::string tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(l)>>{}.from<std::string>(l) \
-                + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(r)>>{}.from<std::string>(r) + ". "; \
-            throw matrix::exception::MatrixAssertError(std::move(tmp)); \
+        auto &&_l = (lhs); \
+        auto &&_r = (rhs); \
+        if (_l != _r) { \
+            std::string _tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_l)>>{}.from<std::string>(_l) \
+                + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_r)>>{}.from<std::string>(_r) + ". "; \
+            throw matrix::exception::MatrixAssertError(std::move(_tmp)); \
         } \
     } while (0); 
 
@@ -86,9 +86,9 @@ namespace matrix::exception {
 
 #define BASSERT_IN(lhs, rhs) \
     do { \
-        auto &&l = (lhs); \
-        decltype(auto) r = (rhs); \
-        matrix::constraints::helper::check(l, r); \
+        auto &&_l = (lhs); \
+        decltype(auto) _r = (rhs); \
+        matrix::constraints::helper::check(_l, _r); \
     } while (0) 
 
 #define bassert_in BASSERT_IN 

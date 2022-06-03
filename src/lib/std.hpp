@@ -4,6 +4,7 @@
 #include <bitset> 
 #include <cassert> 
 #include <chrono>
+#include <cmath> 
 #include <codecvt> 
 #include <cstddef>
 #include <cstdint> 
