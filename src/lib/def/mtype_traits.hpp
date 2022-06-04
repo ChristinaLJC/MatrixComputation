@@ -21,7 +21,9 @@ namespace matrix::type_traits {
         auto constexpr std_to_string_output = [](auto &&a) constexpr -> decltype(std::to_string(a)) {
             return std::to_string(a); 
         }; 
-        if constexpr (decltype(type_traits::is_impl(to_string_trait_invoke)(v))::value) {
+        if constexpr (std::is_same_v<std::decay_t<decltype(v)>, char const *>) {
+            return v; 
+        } else if constexpr (decltype(type_traits::is_impl(to_string_trait_invoke)(v))::value) {
             // std::clog << "Enter the first branch! \n"; 
             return to_string_trait_invoke(v); 
         } else if constexpr (decltype(type_traits::is_impl(std_to_string_output)(v))::value) {
@@ -53,6 +55,12 @@ namespace matrix::type_traits {
     template <typename F> 
     std::string Into<std::string>::into (F const &f) const {
         return stringizing(f); 
+    }
+
+    template <>
+    template <> 
+    std::string Into<std::string>::into (std::string const &f) const {
+        return f; 
     }
 
 }
