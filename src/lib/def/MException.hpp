@@ -10,7 +10,9 @@ namespace matrix::exception {
      */ 
     struct MatrixBaseException : public std::runtime_error {
         using std::runtime_error::runtime_error; 
+        ~MatrixBaseException() = 0; 
     }; 
+    MatrixBaseException::~MatrixBaseException() {} 
 
     /** 
      * MatrixAssertError is specifc exception class for assert tests. 
@@ -34,7 +36,7 @@ namespace matrix::exception {
      */ 
     struct MatrixArithmeticException: public MatrixBaseException {
         using MatrixBaseException::MatrixBaseException; 
-        virtual ~MatrixArithmeticException() = 0; 
+        ~MatrixArithmeticException() = 0; 
     }; 
     MatrixArithmeticException::~MatrixArithmeticException() {}
 

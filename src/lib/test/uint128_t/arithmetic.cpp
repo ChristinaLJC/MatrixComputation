@@ -12,7 +12,6 @@ TEST_METHOD {
     bassert_eq (seven *= seven, 49u); 
 }
 
-
 TEST_METHOD {
     u128 big_number = 9999999u; 
     bassert_eq(big_number / 9u, 1111111u); 
