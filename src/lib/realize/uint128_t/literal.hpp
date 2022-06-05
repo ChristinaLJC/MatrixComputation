@@ -18,6 +18,11 @@ namespace matrix::inline prelude {
 
         template <u32 carry, char v, char... chars> 
         constexpr u128 build() {
+            static_assert (
+                (v >= '0' && v <= '9') || 
+                (v >= 'a' && v <= 'f') || 
+                (v >= 'A' && v <= 'F')
+            ); 
             if constexpr (v >= '0' && v <= '9') {
                 static_assert ((u32)(v - '0') < carry); 
                 constexpr auto lhs = carry_value<carry, sizeof...(chars)>() * (u32)(v - '0'); 
