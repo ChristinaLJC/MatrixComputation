@@ -132,6 +132,7 @@ std::wstring get_from_result(auto &results) {
             }
             ++cnt; 
         }
+        print_out_message << L'\n'; 
     }
     return print_out_message.str(); 
 }
