@@ -31,7 +31,7 @@ namespace matrix::inline prelude {
         }
 
         template <typename F, size_t lhs_index, bool secure> 
-        void multiply(u128 &ans, u128 const &lhs, u128 const &rhs) noexcept (!secure && !logical_error_detected) {
+        constexpr void multiply(u128 &ans, u128 const &lhs, u128 const &rhs) noexcept (!secure && !logical_error_detected) {
             multiply<F, lhs_index, 0, secure>(ans, lhs, rhs); 
             if constexpr (lhs_index < 3) {
                 multiply<F, lhs_index + 1, secure>(ans, lhs, rhs); 

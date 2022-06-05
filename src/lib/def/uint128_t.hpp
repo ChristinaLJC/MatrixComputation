@@ -174,6 +174,12 @@ namespace matrix {
                     }
                 }; 
         }; 
+
+        template <char...> 
+        constexpr u128 operator""_u128 () noexcept; 
+
+        template <char...> 
+        constexpr u128 operator""_uint128_t() noexcept; 
     }
 }
 
@@ -192,3 +198,4 @@ namespace matrix {
 #include "realize/uint128_t/division.hpp"
 #include "realize/uint128_t/opbit.hpp"
 #include "realize/uint128_t/modulus.hpp"
+#include "realize/uint128_t/literal.hpp"
