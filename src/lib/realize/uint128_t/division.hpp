@@ -52,19 +52,18 @@ namespace matrix::inline prelude {
         }
 
         template <typename F, size_t i> 
-        constexpr u32 divide_with_same_level_recursively (u128 &lhs, u128 const &rhs) noexcept(!logical_error_detected) {
+        constexpr u32 divide_with_same_level_recursively (u128 &lhs, u128 const &rhs) {
             if (F{}.template operator()<i>(rhs)) {
                 return divide_with_same_level<F, i>(lhs, rhs); 
             } else if constexpr (i) {
                 return divide_with_same_level_recursively<F, i-1>(lhs, rhs); 
             } else {
-                lassert (false); 
-                abort(); 
+                throw exception::MatrixZeroDividedException("Value divided by zero. "); 
             }
         }
 
         template <typename F, size_t left_shift_possible = 3> 
-        constexpr void divide(u128 &ans, u128 &lhs, u128 const &rhs) noexcept (!logical_error_detected) {
+        constexpr void divide(u128 &ans, u128 &lhs, u128 const &rhs) {
             if constexpr (left_shift_possible) {
                 if (!F{}.template operator()<3>(rhs)) {
                     divide<F, left_shift_possible - 1>(ans, lhs, 

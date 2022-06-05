@@ -80,6 +80,24 @@ namespace matrix {
 
                 constexpr inline u128 operator% (u128 const &) const noexcept (!logical_error_detected); 
 
+                // constexpr inline u128 operator-() const noexcept (!logical_error_detected); 
+
+                constexpr inline u128 operator& (u128 const &) const noexcept (!logical_error_detected); 
+                template <typename Other> 
+                constexpr u128 operator& (Other const &rhs) const noexcept (!logical_error_detected) {
+                    return *this & u128(rhs); 
+                }
+                constexpr inline u128 operator^ (u128 const &) const noexcept (!logical_error_detected); 
+                template <typename Other> 
+                constexpr u128 operator^ (Other const &rhs) const noexcept (!logical_error_detected) {
+                    return *this ^ u128(rhs); 
+                }
+                constexpr inline u128 operator| (u128 const &) const noexcept (!logical_error_detected); 
+                template <typename Other> 
+                constexpr u128 operator| (Other const &rhs) const noexcept(!logical_error_detected) {
+                    return *this | u128(rhs); 
+                }
+
                 constexpr inline u128 operator~() const noexcept (!logical_error_detected); 
                 
                 template <u32 > 
@@ -165,3 +183,4 @@ namespace matrix {
 #include "realize/uint128_t/stringlize.hpp"
 #include "realize/uint128_t/multiplication.hpp"
 #include "realize/uint128_t/division.hpp"
+#include "realize/uint128_t/opbit.hpp"

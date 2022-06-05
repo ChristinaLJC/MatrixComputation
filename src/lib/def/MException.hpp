@@ -30,12 +30,27 @@ namespace matrix::exception {
     }; 
 
     /** 
+     * This exception are the sup-class of all arithmetic calculations. 
+     */ 
+    struct MatrixArithmeticException: public MatrixBaseException {
+        using MatrixBaseException::MatrixBaseException; 
+        virtual ~MatrixArithmeticException() = 0; 
+    }; 
+    MatrixArithmeticException::~MatrixArithmeticException() {}
+
+    /** 
      * This exception would appears when attempt to invoke safe_add / safe_mul series methods. 
      * 
      * Which means we want a correct number addition but fails! 
      */ 
-    struct MatrixOverflowException : public MatrixBaseException {
-        using MatrixBaseException::MatrixBaseException; 
+    struct MatrixOverflowException : public MatrixArithmeticException {
+        using MatrixArithmeticException::MatrixArithmeticException; 
+        // ~MatrixOverflowException() override = default; 
+    }; 
+
+    struct MatrixZeroDividedException: public MatrixArithmeticException {
+        using MatrixArithmeticException::MatrixArithmeticException; 
+        // ~MatrixZeroDividedException() override = default; 
     }; 
 }
 

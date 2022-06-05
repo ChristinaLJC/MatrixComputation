@@ -21,4 +21,8 @@ namespace matrix::inline prelude {
         return *this = result; 
     }
 
+    // constexpr u128 u128::operator-() const noexcept (!logical_error_detected) {
+    //     u128 self = ~*this; 
+    //     return ++self; 
+    // }
 }
