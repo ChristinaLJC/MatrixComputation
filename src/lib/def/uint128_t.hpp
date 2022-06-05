@@ -11,139 +11,139 @@ namespace matrix {
 
                 inline static size_t constexpr DECIMAL_LENGTH = 39; 
 
-                uint128_t(): std::array<u32, 4>({}) {} 
-                uint128_t(u32 v): std::array<u32, 4>({v}) {} 
-                uint128_t(u64 v): std::array<u32, 4>({(u32)(v % 0xFFFFFFFF), (u32)(v >> 32)}) {} 
-                uint128_t(u128 const &) = default; 
+                constexpr uint128_t(): std::array<u32, 4>({}) {} 
+                constexpr uint128_t(u32 v): std::array<u32, 4>({v}) {} 
+                constexpr uint128_t(u64 v): std::array<u32, 4>({(u32)(v % 0xFFFFFFFF), (u32)(v >> 32)}) {} 
+                constexpr uint128_t(u128 const &) = default; 
 
                 template <bool secure = false> 
-                u128 operator+ (u128 const &) const noexcept(!secure && !logical_error_detected);  
+                constexpr u128 operator+ (u128 const &) const noexcept(!secure && !logical_error_detected);  
 
                 template <bool secure = false, typename Other> 
-                u128 operator+ (Other const &rhs) const noexcept (!secure && !logical_error_detected) {
+                constexpr u128 operator+ (Other const &rhs) const noexcept (!secure && !logical_error_detected) {
                     return this->template operator+ <secure>(u128(rhs)); 
                 }
 
                 template <bool secure = false> 
-                u128 &operator+= (u128 const &) noexcept (!secure && !logical_error_detected); 
+                constexpr u128 &operator+= (u128 const &) noexcept (!secure && !logical_error_detected); 
 
                 template <bool secure = false, typename Other> 
-                u128 &operator+= (Other const &rhs) noexcept (!secure && !logical_error_detected) {
+                constexpr u128 &operator+= (Other const &rhs) noexcept (!secure && !logical_error_detected) {
                     return this->template operator+= <secure>(u128(rhs)); 
                 }
 
                 template <bool secure = false> 
-                u128 operator- (u128 const &) const noexcept(!secure && !logical_error_detected);  
+                constexpr u128 operator- (u128 const &) const noexcept(!secure && !logical_error_detected);  
 
                 template <bool secure = false, typename Other> 
-                u128 operator- (Other const &rhs) const noexcept (!secure && !logical_error_detected) {
+                constexpr u128 operator- (Other const &rhs) const noexcept (!secure && !logical_error_detected) {
                     return this->template operator- <secure>(u128(rhs)); 
                 }
 
                 template <bool secure = false> 
-                u128 &operator-= (u128 const &) noexcept (!secure && !logical_error_detected); 
+                constexpr u128 &operator-= (u128 const &) noexcept (!secure && !logical_error_detected); 
 
                 template <bool secure = false, typename Other> 
-                u128 &operator-= (Other const &rhs) noexcept (!secure && !logical_error_detected) {
+                constexpr u128 &operator-= (Other const &rhs) noexcept (!secure && !logical_error_detected) {
                     return this->template operator-= <secure>(u128(rhs)); 
                 }
 
                 template <bool secure = false> 
-                u128 operator* (u128 const &) const noexcept(!secure && !logical_error_detected);  
+                constexpr u128 operator* (u128 const &) const noexcept(!secure && !logical_error_detected);  
 
                 template <bool secure = false, typename Other> 
-                u128 operator* (Other const &rhs) const noexcept (!secure && !logical_error_detected) {
+                constexpr u128 operator* (Other const &rhs) const noexcept (!secure && !logical_error_detected) {
                     return this->template operator* <secure>(u128(rhs)); 
                 }
 
                 template <bool secure = false> 
-                u128 &operator*= (u128 const &) noexcept (!secure && !logical_error_detected); 
+                constexpr u128 &operator*= (u128 const &) noexcept (!secure && !logical_error_detected); 
 
                 template <bool secure = false, typename Other> 
-                u128 &operator*= (Other const &rhs) noexcept (!secure && !logical_error_detected) {
+                constexpr u128 &operator*= (Other const &rhs) noexcept (!secure && !logical_error_detected) {
                     return this->template operator*= <secure>(u128(rhs)); 
                 }
 
-                inline u128 operator/ (u128 const &) const; 
+                constexpr inline u128 operator/ (u128 const &) const; 
 
                 template <typename Other> 
-                u128 operator/ (Other const &rhs) const {
+                constexpr u128 operator/ (Other const &rhs) const {
                     return *this / u128(rhs); 
                 }
 
-                inline u128 &operator/= (u128 const &); 
+                constexpr inline u128 &operator/= (u128 const &); 
 
                 template <typename Other> 
-                u128 &operator/= (Other const &rhs) {
+                constexpr u128 &operator/= (Other const &rhs) {
                     return *this /= u128(rhs); 
                 }
 
-                inline u128 operator% (u128 const &) const noexcept (!logical_error_detected); 
+                constexpr inline u128 operator% (u128 const &) const noexcept (!logical_error_detected); 
 
-                inline u128 operator~() const noexcept (!logical_error_detected); 
+                constexpr inline u128 operator~() const noexcept (!logical_error_detected); 
                 
                 template <u32 > 
-                u128 &divide_and_then_eq(u32 * = nullptr) noexcept(!logical_error_detected); 
+                constexpr u128 &divide_and_then_eq(u32 * = nullptr) noexcept(!logical_error_detected); 
 
                 template <typename T> 
-                T into() const; 
+                constexpr T into() const; 
 
                 template <> 
                 std::string into() const {
                     return std::string(*this); 
                 }
 
-                inline operator bool() const noexcept; 
+                constexpr inline operator bool() const noexcept; 
 
                 template <bool secure = false> 
-                u128 &operator++() noexcept (!secure && !logical_error_detected); 
+                constexpr u128 &operator++() noexcept (!secure && !logical_error_detected); 
 
                 inline operator std::string() const noexcept(!logical_error_detected); 
 
-                inline bool operator ==(u32 ) const noexcept; 
-                inline bool operator ==(u64 ) const noexcept; 
-                inline bool operator ==(u128 const &) const noexcept; 
+                constexpr inline bool operator ==(u32 ) const noexcept; 
+                constexpr inline bool operator ==(u64 ) const noexcept; 
+                constexpr inline bool operator ==(u128 const &) const noexcept; 
 
-                inline bool operator< (u128 const &) const noexcept; 
+                constexpr inline bool operator< (u128 const &) const noexcept; 
 
-                inline bool operator<= (u128 const &) const noexcept; 
+                constexpr inline bool operator<= (u128 const &) const noexcept; 
 
-                bool operator> (u128 const &rhs) const noexcept {
+                constexpr bool operator> (u128 const &rhs) const noexcept {
                     return rhs < *this; 
                 }
 
-                bool operator>= (u128 const &rhs) const noexcept {
+                constexpr bool operator>= (u128 const &rhs) const noexcept {
                     return rhs <= *this; 
                 }
 
                 template <typename T> 
-                bool operator< (T const &rhs) const noexcept {
+                constexpr bool operator< (T const &rhs) const noexcept {
                     return *this < u128(rhs); 
                 }
                 
                 template <typename T> 
-                bool operator> (T const &rhs) const noexcept {
+                constexpr bool operator> (T const &rhs) const noexcept {
                     return *this > u128(rhs); 
                 }
 
                 template <typename T> 
-                bool operator<= (T const &rhs) const noexcept {
+                constexpr bool operator<= (T const &rhs) const noexcept {
                     return *this <= u128(rhs); 
                 }
 
                 template <typename T> 
-                bool operator>= (T const &rhs) const noexcept {
+                constexpr bool operator>= (T const &rhs) const noexcept {
                     return *this >= u128(rhs); 
                 }
             
             private: 
                 struct GetByIndex {
                     template <size_t k> 
-                    u32 &operator()(u128 &self) const noexcept {
+                    constexpr u32 &operator()(u128 &self) const noexcept {
                         return std::get<k>(self); 
                     }
                     template <size_t k> 
-                    u32 const &operator()(u128 const &self) const noexcept {
+                    constexpr u32 const &operator()(u128 const &self) const noexcept {
                         return std::get<k>(self); 
                         // return this(const_cast<u128 &>(self)); 
                     }

@@ -4,7 +4,7 @@ namespace matrix::inline prelude {
 
     namespace helper {
         template <typename F, size_t index, u32 to_divide> 
-        void divide_and_then_eq(u128 &self, u32 *remainder = nullptr, u64 cached = 0) noexcept (!logical_error_detected) {
+        constexpr void divide_and_then_eq(u128 &self, u32 *remainder = nullptr, u64 cached = 0) noexcept (!logical_error_detected) {
             auto &&v = F{}.template operator()<index>(self); 
             cached = (cached << 32) + v; 
 
@@ -27,7 +27,7 @@ namespace matrix::inline prelude {
     }
 
     template <u32 to_divide> 
-    u128 &u128::divide_and_then_eq(u32 *remainder) noexcept(!logical_error_detected) {
+    constexpr u128 &u128::divide_and_then_eq(u32 *remainder) noexcept(!logical_error_detected) {
         helper::divide_and_then_eq<GetByIndex, 3, to_divide>(*this, remainder); 
         return *this; 
     }

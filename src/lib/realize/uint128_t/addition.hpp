@@ -6,7 +6,7 @@ namespace matrix::inline prelude {
 
     namespace helper {
         template <typename F, bool secure, size_t index = 0> 
-        void add(u128 &result, u128 const &lhs, u128 const &rhs, u64 cached = 0) noexcept (!secure && !logical_error_detected) {
+        constexpr void add(u128 &result, u128 const &lhs, u128 const &rhs, u64 cached = 0) noexcept (!secure && !logical_error_detected) {
             lassert (cached <= std::numeric_limits<u32>::max()); 
             cached += F{}.template operator()<index>(lhs); 
             cached += F{}.template operator()<index>(rhs); 
@@ -25,21 +25,21 @@ namespace matrix::inline prelude {
     }
 
     template <bool secure> 
-    u128 u128::operator+ (u128 const &rhs) const noexcept (!secure && !logical_error_detected) {
+    constexpr u128 u128::operator+ (u128 const &rhs) const noexcept (!secure && !logical_error_detected) {
         u128 result; 
         helper::add<GetByIndex, secure>(result, *this, rhs); 
         return result; 
     }
 
     template <bool secure> 
-    u128 &u128::operator+= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
+    constexpr u128 &u128::operator+= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
         u128 result = *this + rhs; 
         return *this = result;  
     }
 
     namespace helper {
         template <typename F, size_t upper_index, u32 to_add, bool secure, size_t now_index = 0> 
-        void add_constant_integral(u128 &self) {
+        constexpr void add_constant_integral(u128 &self) {
             auto &&v = F{}.template operator()<now_index>(self); 
             v += to_add; 
             if (v < to_add) { 
@@ -54,7 +54,7 @@ namespace matrix::inline prelude {
     }
 
     template <bool secure> 
-    u128 &u128::operator++() noexcept (!secure && !logical_error_detected) {
+    constexpr u128 &u128::operator++() noexcept (!secure && !logical_error_detected) {
         u128 self = *this; 
         helper::add_constant_integral<GetByIndex, 3, 1, secure>(self); 
         return *this = self;

@@ -4,7 +4,7 @@ namespace matrix::inline prelude {
 
     namespace helper {
         template <typename F, size_t lhs_index, size_t rhs_index, bool secure> 
-        void multiply(u128 &ans, u128 const &lhs, u128 const &rhs, u64 cached = 0) noexcept (!secure && !logical_error_detected) {
+        constexpr void multiply(u128 &ans, u128 const &lhs, u128 const &rhs, u64 cached = 0) noexcept (!secure && !logical_error_detected) {
             auto &&lhs_v = F{}.template operator()<lhs_index>(lhs); 
             auto &&rhs_v = F{}.template operator()<rhs_index>(rhs); 
             // std::clog << "multiply left value {}(i:{}) and right value {}(i:{}). \n"_format(lhs_v, lhs_index, rhs_v, rhs_index); 
@@ -44,14 +44,14 @@ namespace matrix::inline prelude {
     }
 
     template <bool secure> 
-    u128 u128::operator* (u128 const &rhs) const noexcept(!secure && !logical_error_detected) {
+    constexpr u128 u128::operator* (u128 const &rhs) const noexcept(!secure && !logical_error_detected) {
         u128 result; 
         helper::multiply<GetByIndex, 0, secure>(result, *this, rhs); 
         return result; 
     }
 
     template <bool secure> 
-    u128 &u128::operator*= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
+    constexpr u128 &u128::operator*= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
         u128 result = this->template operator*<secure>(rhs); 
         return *this = result; 
     }

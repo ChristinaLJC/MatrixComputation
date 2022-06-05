@@ -22,12 +22,34 @@ TEST_METHOD {
     u128 alpha = 1u; 
     constexpr u32 up_bound = 5; 
     for (u32 i {}; i < up_bound; ++i) {
-        // println(alpha); 
         alpha *= i + 1; 
     }
     for (u32 i {}; i < up_bound; ++i) {
         alpha /= i + 1; 
-        // println(alpha); 
+    }
+    bassert_eq(alpha, 1u); 
+}
+
+TEST_METHOD {
+    u128 alpha = 1u; 
+    constexpr u32 up_bound = 20; 
+    for (u32 i {}; i < up_bound; ++i) {
+        alpha.template operator*=<true>(i+1); 
+    }
+    for (u32 i {}; i < up_bound; ++i) {
+        alpha /= i + 1; 
+    }
+    bassert_eq(alpha, 1u); 
+}
+
+TEST_METHOD {
+    u128 alpha = 1u; 
+    constexpr u32 up_bound = 30; 
+    for (u32 i {}; i < up_bound; ++i) {
+        alpha.template operator*=<true>(i+1); 
+    }
+    for (u32 i {}; i < up_bound; ++i) {
+        alpha /= i + 1; 
     }
     bassert_eq(alpha, 1u); 
 }
@@ -35,5 +57,6 @@ TEST_METHOD {
 TEST_METHOD {
     u128 t = 77u; 
     t /= t; 
-    println(t); 
+    // println(t); 
+    bassert_eq(t, 1u); 
 }
