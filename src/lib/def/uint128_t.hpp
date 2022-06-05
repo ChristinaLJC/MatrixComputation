@@ -175,6 +175,25 @@ namespace matrix {
                 }; 
         }; 
 
+        // Realize some symmetric operators: 
+
+#define REALIZE4OP(symbol) \
+    template <typename _Other> \
+    constexpr u128 operator symbol (_Other const &lhs, u128 const &rhs) noexcept { \
+        return u128(lhs) symbol rhs; \
+    }
+        // template <typename Other> 
+        REALIZE4OP(+)
+        REALIZE4OP(-)
+        REALIZE4OP(*)
+        REALIZE4OP(/)
+        REALIZE4OP(^)
+        REALIZE4OP(&)
+        REALIZE4OP(|)
+
+#undef REALIZE4OP
+
+
         template <char...> 
         constexpr u128 operator""_u128 () noexcept; 
 
