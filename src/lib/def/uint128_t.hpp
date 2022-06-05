@@ -53,18 +53,18 @@ namespace matrix {
                 // u128 operator/ (u64) const noexcept(!secure && !logical_error_detected);
                 // template <bool secure = true> 
                 // u128 operator/ (u32) const noexcept(!secure && !logical_error_detected);
-                u128 operator% (u128) const noexcept (!logical_error_detected); 
+                inline u128 operator% (u128) const noexcept (!logical_error_detected); 
                 // u64 operator% (u64) const noexcept(!logical_error_detected); 
                 // u32 operator% (u32) const noexcept(!logical_error_detected); 
 
-                u128 operator~() const noexcept (!logical_error_detected); 
+                inline u128 operator~() const noexcept (!logical_error_detected); 
                 
                 /** 
                  * Divide a uint32_t value and get the quotient and remainder. 
                  *
                  * Not check of the divisor is zero! 
                  */ 
-                u128 &divide_and_equal(u32, u32 * = nullptr) noexcept(!logical_error_detected);
+                inline u128 &divide_and_equal(u32, u32 * = nullptr) noexcept(!logical_error_detected);
 
                 template <u32 > 
                 u128 &divide_and_equal(u32 *) noexcept(!logical_error_detected); 
@@ -72,20 +72,20 @@ namespace matrix {
                 template <typename T> 
                 T into() const; 
 
-                operator bool() const noexcept; 
+                inline operator bool() const noexcept; 
 
                 template <bool secure = false> 
                 u128 &operator++() noexcept (!secure && !logical_error_detected); 
 
-                operator std::string() const noexcept(!logical_error_detected); 
+                inline operator std::string() const noexcept(!logical_error_detected); 
 
-                bool operator ==(u32 ) const noexcept; 
-                bool operator ==(u64 ) const noexcept; 
-                bool operator ==(u128 const &) const noexcept; 
+                inline bool operator ==(u32 ) const noexcept; 
+                inline bool operator ==(u64 ) const noexcept; 
+                inline bool operator ==(u128 const &) const noexcept; 
 
-                bool operator< (u128 const &) const noexcept; 
+                inline bool operator< (u128 const &) const noexcept; 
 
-                bool operator<= (u128 const &) const noexcept; 
+                inline bool operator<= (u128 const &) const noexcept; 
 
                 bool operator> (u128 const &rhs) const noexcept {
                     return rhs <= *this; 

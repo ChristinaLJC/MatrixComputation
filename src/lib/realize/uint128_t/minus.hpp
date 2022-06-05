@@ -1,3 +1,5 @@
+#pragma once 
+
 namespace matrix::inline prelude {
 
     template <bool secure> 

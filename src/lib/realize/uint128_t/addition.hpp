@@ -1,3 +1,5 @@
+#pragma once 
+
 #include "def/format.hpp"
 
 namespace matrix::inline prelude {
