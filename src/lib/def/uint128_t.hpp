@@ -39,6 +39,9 @@ namespace matrix {
                 // u128 operator- (u32) const noexcept(!secure && !logical_error_detected); 
 
                 template <bool secure = false> 
+                u128 &operator-= (u128 const &) noexcept (!secure && !logical_error_detected); 
+
+                template <bool secure = false> 
                 u128 operator* (u128 const &) const noexcept(!secure && !logical_error_detected);  
                 // template <bool secure = false> 
                 // u128 operator* (u64) const noexcept(!secure && !logical_error_detected);
@@ -71,11 +74,26 @@ namespace matrix {
 
                 operator bool() const noexcept; 
 
+                template <bool secure = false> 
+                u128 &operator++() noexcept (!secure && !logical_error_detected); 
+
                 operator std::string() const noexcept(!logical_error_detected); 
 
-                // bool operator ==(u32 ) const noexcept; 
-                // bool operator ==(u64 ) const noexcept; 
+                bool operator ==(u32 ) const noexcept; 
+                bool operator ==(u64 ) const noexcept; 
                 bool operator ==(u128 const &) const noexcept; 
+
+                bool operator< (u128 const &) const noexcept; 
+
+                bool operator<= (u128 const &) const noexcept; 
+
+                bool operator> (u128 const &rhs) const noexcept {
+                    return rhs <= *this; 
+                }
+
+                bool operator>= (u128 const &rhs) const noexcept {
+                    return !(rhs < *this); 
+                }
 
             private: 
                 struct GetByIndex {
@@ -96,7 +114,9 @@ namespace matrix {
 // #include "realize/operator_u128/operator_plus.hpp"
 // #include "realize/operator_u128/operator_cmp.hpp"
 
-#include "realize/u128/reverse_bits.hpp"
-#include "realize/u128/addition.hpp"
-#include "realize/u128/partial_eq.hpp"
-#include "realize/u128/type_cast.hpp"
+#include "realize/uint128_t/reverse_bits.hpp"
+#include "realize/uint128_t/addition.hpp"
+#include "realize/uint128_t/partial_eq.hpp"
+#include "realize/uint128_t/type_cast.hpp"
+#include "realize/uint128_t/total_order.hpp"
+#include "realize/uint128_t/minus.hpp"

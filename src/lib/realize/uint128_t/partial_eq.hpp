@@ -18,4 +18,12 @@ namespace matrix::inline prelude {
     bool u128::operator ==(u128 const &rhs) const noexcept {
         return helper::partial_eq<GetByIndex, 3>(*this, rhs); 
     }
+
+    bool u128::operator ==(u32 rhs) const noexcept {
+        return *this == u128(rhs); 
+    }
+
+    bool u128::operator ==(u64 rhs) const noexcept {
+        return *this == u128(rhs); 
+    }
 }

@@ -153,7 +153,7 @@ int main() {
     std::vector<std::future<std::pair<double, std::vector<std::string>>>> asyncs; 
     asyncs.reserve(END_TEST_NUMBERS); 
 
-    helper<END_TEST_NUMBERS>(asyncs); 
+    ::helper<END_TEST_NUMBERS>(asyncs); 
 
     using namespace std::literals::chrono_literals; 
     auto until = std::chrono::high_resolution_clock::now() + TIME_OUT;
