@@ -23,3 +23,8 @@ TEST_METHOD {
     u128 v (1ull); 
     bassert (v); 
 }
+
+TEST_METHOD {
+    u128 s = 1111111u; 
+    bassert_eq (s, 1111111u); 
+}

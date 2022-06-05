@@ -15,14 +15,19 @@ namespace matrix::type_traits {
 
     template <typename T> 
     std::string stringizing (T const &v) {
+
         auto constexpr to_string_trait_invoke = [](auto &&a) constexpr -> decltype(to_string(a)) {
             return to_string(a); 
         }; 
         auto constexpr std_to_string_output = [](auto &&a) constexpr -> decltype(std::to_string(a)) {
             return std::to_string(a); 
         }; 
-        if constexpr (std::is_same_v<std::decay_t<decltype(v)>, char const *>) {
-            return v; 
+        auto constexpr to_string_op_trait = [](auto &&a) constexpr -> decltype(std::string(a)) {
+            return std::string(a); 
+        }; 
+        
+        if constexpr (decltype(type_traits::is_impl(to_string_op_trait)(v))::value) {
+            return to_string_op_trait(v); 
         } else if constexpr (decltype(type_traits::is_impl(to_string_trait_invoke)(v))::value) {
             // std::clog << "Enter the first branch! \n"; 
             return to_string_trait_invoke(v); 

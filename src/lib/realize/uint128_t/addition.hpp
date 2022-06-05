@@ -41,12 +41,14 @@ namespace matrix::inline prelude {
         template <typename F, size_t upper_index, u32 to_add, bool secure, size_t now_index = 0> 
         void add_constant_integral(u128 &self) {
             auto &&v = F{}.template operator()<now_index>(self); 
-            if (v <= std::numeric_limits<u32>::max() - to_add) { 
-                v += to_add; 
-            } else if constexpr (now_index < upper_index) {
-                add_constant_integral<F, upper_index, 1, secure, now_index + 1>(self); 
-            } else if constexpr (secure) {
-                throw exception::MatrixOverflowException(STRING(__FUNCTION__) " call meets a overflow error, the value {} is lost. "_format(v + to_add - std::numeric_limits<u32>::max())); 
+            v += to_add; 
+            if (v < to_add) { 
+                if constexpr (now_index < upper_index) {
+                    // std::clog << "Now v is {}. \n"_format(v); 
+                    add_constant_integral<F, upper_index, 1, secure, now_index + 1>(self); 
+                } else if constexpr (secure) {
+                    throw exception::MatrixOverflowException(STRING(__FUNCTION__) " call meets a overflow error, the value {} is lost. "_format(v + to_add - std::numeric_limits<u32>::max())); 
+                }
             }
         }
     }
@@ -54,7 +56,7 @@ namespace matrix::inline prelude {
     template <bool secure> 
     u128 &u128::operator++() noexcept (!secure && !logical_error_detected) {
         u128 self = *this; 
-        add_constant_integral<GetByIndex, 3, 1, secure>(self); 
+        helper::add_constant_integral<GetByIndex, 3, 1, secure>(self); 
         return *this = self;
     }
 }
