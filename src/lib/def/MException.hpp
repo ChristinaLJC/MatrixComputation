@@ -92,3 +92,16 @@ namespace matrix::exception {
     } while (0) 
 
 #define bassert_in BASSERT_IN 
+
+#define BASSERT_NE(lhs, rhs) \
+    do { \
+        auto &&_l = (lhs); \
+        auto &&_r = (rhs); \
+        if (_l == _r) { \
+            std::string _tmp = __FILE__ ":" STRING(__LINE__) " assert unequal fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_l)>>{}.from<std::string>(_l) \
+                + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_r)>>{}.from<std::string>(_r) + ". "; \
+            throw matrix::exception::MatrixAssertError(std::move(_tmp)); \
+        } \
+    } while (0); 
+
+#define bassert_ne BASSERT_NE

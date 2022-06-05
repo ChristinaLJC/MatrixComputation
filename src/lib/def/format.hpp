@@ -1,3 +1,5 @@
+#pragma once 
+
 #include "std.hpp"
 #include "def/mexception.hpp"
 #include "def/mtype_traits.hpp"

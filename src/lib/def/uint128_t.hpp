@@ -64,10 +64,10 @@ namespace matrix {
                  *
                  * Not check of the divisor is zero! 
                  */ 
-                inline u128 &divide_and_equal(u32, u32 * = nullptr) noexcept(!logical_error_detected);
+                // inline u128 &divide_and_equal(u32, u32 * = nullptr) noexcept(!logical_error_detected);
 
                 template <u32 > 
-                u128 &divide_and_equal(u32 *) noexcept(!logical_error_detected); 
+                u128 &divide_and_then_eq(u32 * = nullptr) noexcept(!logical_error_detected); 
 
                 template <typename T> 
                 T into() const; 
@@ -120,3 +120,5 @@ namespace matrix {
 #include "realize/uint128_t/type_cast.hpp"
 #include "realize/uint128_t/total_order.hpp"
 #include "realize/uint128_t/minus.hpp"
+#include "realize/uint128_t/simple_division.hpp" 
+#include "realize/uint128_t/stringlize.hpp"

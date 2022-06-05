@@ -4,7 +4,7 @@ namespace matrix::inline prelude {
 
     namespace helper {
         template <typename F, size_t up_index> 
-        bool partial_eq(u128 const &lhs, u128 const &rhs) {
+        bool partial_eq(u128 const &lhs, u128 const &rhs) noexcept {
             auto &&lhs_val = F{}.template operator()<up_index>(lhs); 
             auto &&rhs_val = F{}.template operator()<up_index>(rhs); 
             if (lhs_val != rhs_val) {
