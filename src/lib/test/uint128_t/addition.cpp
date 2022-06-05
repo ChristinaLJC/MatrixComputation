@@ -93,6 +93,20 @@ TEST_METHOD {
 // Attempt to add a more large value! 
 TEST_METHOD {
     u128 v = 18446744073709551615ull; 
-    v += 18446744073709551615ull; 
+    auto t = v .template operator+ <true> (18446744073709551615ull); 
+    bassert_eq (t, 36893488147419103230_u128); 
+}
+
+// Test the add-self situations. 
+TEST_METHOD {
+    u128 v = 18446744073709551615ull; 
+    v += v; 
     bassert_eq (v, 36893488147419103230_u128); 
+}
+
+// Four times a value~ 
+TEST_METHOD {
+    u128 v = 75u; 
+    v += v += v; 
+    bassert_eq (v, 300u); 
 }

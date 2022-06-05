@@ -13,7 +13,7 @@ namespace matrix {
 
                 constexpr uint128_t(): std::array<u32, 4>({}) {} 
                 constexpr uint128_t(u32 v): std::array<u32, 4>({v}) {} 
-                constexpr uint128_t(u64 v): std::array<u32, 4>({(u32)(v % 0xFFFFFFFF), (u32)(v >> 32)}) {} 
+                constexpr uint128_t(u64 v): std::array<u32, 4>({(u32)(v & 0xFFFFFFFF), (u32)(v >> 32)}) {} 
                 constexpr uint128_t(u128 const &) = default; 
 
                 template <bool secure = false> 
@@ -210,7 +210,7 @@ namespace matrix {
 #include "realize/uint128_t/partial_eq.hpp"
 #include "realize/uint128_t/type_cast.hpp"
 #include "realize/uint128_t/total_order.hpp"
-#include "realize/uint128_t/minus.hpp"
+#include "realize/uint128_t/subtraction.hpp"
 #include "realize/uint128_t/simple_division.hpp" 
 #include "realize/uint128_t/stringlize.hpp"
 #include "realize/uint128_t/multiplication.hpp"
