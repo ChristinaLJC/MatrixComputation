@@ -127,8 +127,8 @@ std::wstring get_from_result(auto &results) {
                     for (auto &&to_out: infos) {
                         print_out_message << std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>>().from_bytes(std::move(to_out)) << L'\n' << L'\t'; 
                     }
+                    print_out_message << L'\n'; 
                 }
-                print_out_message << L'\n'; 
             }
             ++cnt; 
         }

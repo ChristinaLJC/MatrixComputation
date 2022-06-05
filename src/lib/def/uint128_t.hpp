@@ -14,43 +14,47 @@ namespace matrix {
                 uint128_t(): std::array<u32, 4>({}) {} 
                 uint128_t(u32 v): std::array<u32, 4>({v}) {} 
                 uint128_t(u64 v): std::array<u32, 4>({(u32)(v % 0xFFFFFFFF), (u32)(v >> 32)}) {} 
+                uint128_t(u128 const &) = default; 
 
                 template <bool secure = false> 
                 u128 operator+ (u128 const &) const noexcept(!secure && !logical_error_detected);  
-                template <bool secure = false> 
-                u128 operator+ (u64) const noexcept(!secure && !logical_error_detected); 
-                template <bool secure = false> 
-                u128 operator+ (u32) const noexcept(!secure && !logical_error_detected); 
+                // template <bool secure = false> 
+                // u128 operator+ (u64) const noexcept(!secure && !logical_error_detected); 
+                // template <bool secure = false> 
+                // u128 operator+ (u32) const noexcept(!secure && !logical_error_detected); 
 
                 template <bool secure = false> 
-                u128 operator+= (u128 const &) const noexcept (!secure && !logical_error_detected); 
-                template <bool secure = false> 
-                u128 operator+= (u64 ) const noexcept (!secure && !logical_error_detected); 
-                template <bool secure = false> 
-                u128 operator+= (u32 ) const noexcept (!secure && !logical_error_detected); 
+                u128 &operator+= (u128 const &) noexcept (!secure && !logical_error_detected); 
+                // template <bool secure = false> 
+                // u128 operator+= (u64 ) const noexcept (!secure && !logical_error_detected); 
+                // template <bool secure = false> 
+                // u128 operator+= (u32 ) const noexcept (!secure && !logical_error_detected); 
 
 
                 template <bool secure = false> 
                 u128 operator- (u128 const &) const noexcept(!secure && !logical_error_detected);  
-                template <bool secure = false> 
-                u128 operator- (u64) const noexcept(!secure && !logical_error_detected); 
-                template <bool secure = false> 
-                u128 operator- (u32) const noexcept(!secure && !logical_error_detected); 
+                // template <bool secure = false> 
+                // u128 operator- (u64) const noexcept(!secure && !logical_error_detected); 
+                // template <bool secure = false> 
+                // u128 operator- (u32) const noexcept(!secure && !logical_error_detected); 
+
                 template <bool secure = false> 
                 u128 operator* (u128 const &) const noexcept(!secure && !logical_error_detected);  
-                template <bool secure = false> 
-                u128 operator* (u64) const noexcept(!secure && !logical_error_detected);
-                template <bool secure = false> 
-                u128 operator* (u32) const noexcept(!secure && !logical_error_detected);
+                // template <bool secure = false> 
+                // u128 operator* (u64) const noexcept(!secure && !logical_error_detected);
+                // template <bool secure = false> 
+                // u128 operator* (u32) const noexcept(!secure && !logical_error_detected);
                 template <bool secure = true> 
                 u128 operator/ (u128 const &) const noexcept(!secure && !logical_error_detected);  
-                template <bool secure = true> 
-                u128 operator/ (u64) const noexcept(!secure && !logical_error_detected);
-                template <bool secure = true> 
-                u128 operator/ (u32) const noexcept(!secure && !logical_error_detected);
+                // template <bool secure = true> 
+                // u128 operator/ (u64) const noexcept(!secure && !logical_error_detected);
+                // template <bool secure = true> 
+                // u128 operator/ (u32) const noexcept(!secure && !logical_error_detected);
                 u128 operator% (u128) const noexcept (!logical_error_detected); 
-                u64 operator% (u64) const noexcept(!logical_error_detected); 
-                u32 operator% (u32) const noexcept(!logical_error_detected); 
+                // u64 operator% (u64) const noexcept(!logical_error_detected); 
+                // u32 operator% (u32) const noexcept(!logical_error_detected); 
+
+                u128 operator~() const noexcept (!logical_error_detected); 
                 
                 /** 
                  * Divide a uint32_t value and get the quotient and remainder. 
@@ -69,9 +73,10 @@ namespace matrix {
 
                 operator std::string() const noexcept(!logical_error_detected); 
 
-                bool operator ==(u32 ) const noexcept; 
-                bool operator ==(u64 ) const noexcept; 
+                // bool operator ==(u32 ) const noexcept; 
+                // bool operator ==(u64 ) const noexcept; 
                 bool operator ==(u128 const &) const noexcept; 
+
             private: 
                 struct GetByIndex {
                     template <size_t k> 
@@ -88,5 +93,10 @@ namespace matrix {
     }
 }
 
-#include "realize/operator_u128/operator_plus.hpp"
-#include "realize/operator_u128/operator_cmp.hpp"
+// #include "realize/operator_u128/operator_plus.hpp"
+// #include "realize/operator_u128/operator_cmp.hpp"
+
+#include "realize/u128/reverse_bits.hpp"
+#include "realize/u128/addition.hpp"
+#include "realize/u128/partial_eq.hpp"
+#include "realize/u128/type_cast.hpp"
