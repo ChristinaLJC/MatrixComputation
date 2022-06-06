@@ -3,7 +3,15 @@
 
 #include "addition.cpp" 
 #include "subtraction.cpp" 
+#include "multiplication.cpp"
+#include "division.cpp" 
 
-#include "partial_eq.cpp"
+// Prepare to deprecate 
+#include "arithmetic.cpp"
+
+#include "cast.cpp" 
+#include "bitop.cpp"
+#include "reverse.cpp"
 #include "stringlize.cpp"
+
 #include "total_order.cpp"
