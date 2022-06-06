@@ -93,7 +93,7 @@ namespace matrix::inline prelude {
     }
 
     constexpr u128 &u128::operator/= (u128 const &rhs) {
-        u128 ans = *this / rhs; 
-        return *this = ans; 
+        // u128 ans = *this / rhs; 
+        return *this = *this / rhs; 
     }
 }

@@ -40,9 +40,9 @@ namespace matrix::inline prelude {
 
     template <bool secure> 
     constexpr u128 &u128::operator+= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
-        u128 result = *this + rhs; 
+        // u128 result = *this + rhs; 
         // std::clog << std::string(result) << '\n'; 
-        return *this = result;  
+        return *this = *this + rhs; 
     }
 
     namespace helper {

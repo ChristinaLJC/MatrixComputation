@@ -52,7 +52,7 @@ namespace matrix::inline prelude {
 
     template <bool secure> 
     constexpr u128 &u128::operator*= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
-        u128 result = this->template operator*<secure>(rhs); 
-        return *this = result; 
+        // u128 result = this->template operator*<secure>(rhs); 
+        return *this = this->template operator*<secure>(rhs); 
     }
 }

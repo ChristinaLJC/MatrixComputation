@@ -45,14 +45,18 @@ namespace matrix::exception {
      * 
      * Which means we want a correct number addition but fails! 
      */ 
-    struct MatrixOverflowException : public MatrixArithmeticException {
+    struct MatrixOverflowException final : public MatrixArithmeticException {
         using MatrixArithmeticException::MatrixArithmeticException; 
         // ~MatrixOverflowException() override = default; 
     }; 
 
-    struct MatrixZeroDividedException: public MatrixArithmeticException {
+    struct MatrixZeroDividedException final : public MatrixArithmeticException {
         using MatrixArithmeticException::MatrixArithmeticException; 
         // ~MatrixZeroDividedException() override = default; 
+    }; 
+
+    struct MatrixBadCastException final : public MatrixArithmeticException {
+        using MatrixArithmeticException::MatrixArithmeticException; 
     }; 
 }
 

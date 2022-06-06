@@ -25,6 +25,9 @@ namespace matrix::type_traits {
         auto constexpr to_string_op_trait = [](auto &&a) constexpr -> decltype(std::string(a)) {
             return std::string(a); 
         }; 
+        auto constexpr fetch_name_trait = [] (auto &&a) constexpr -> std::enable_if_t<std::is_same_v<decltype(a.name()), char const *>, std::string> {
+            return std::string(a.name()); 
+        }; 
         
         if constexpr (decltype(type_traits::is_impl(to_string_op_trait)(v))::value) {
             return to_string_op_trait(v); 
@@ -34,6 +37,8 @@ namespace matrix::type_traits {
         } else if constexpr (decltype(type_traits::is_impl(std_to_string_output)(v))::value) {
             // std::clog << "Enter the second branch! \n"; 
             return std_to_string_output(v); 
+        } else if constexpr (decltype(type_traits::is_impl(fetch_name_trait)(v))::value) {
+            return fetch_name_trait(v); 
         }
         return "[Not Realize String Trait]"; 
     }

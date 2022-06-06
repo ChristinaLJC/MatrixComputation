@@ -107,6 +107,21 @@ namespace matrix {
                     return *this | u128(rhs); 
                 }
 
+#define BUILD_OPERATOR_WITH_THEN_EQ(symbol) \
+    constexpr inline u128 &operator symbol##= (u128 const &rhs) noexcept (!logical_error_detected) { \
+        return *this = *this symbol rhs; \
+    } \
+    template <typename _Other> \
+    constexpr u128 &operator symbol##= (_Other const &rhs) noexcept (!logical_error_detected) { \
+        return *this symbol##= u128(rhs); \
+    } 
+
+                BUILD_OPERATOR_WITH_THEN_EQ(&)
+                BUILD_OPERATOR_WITH_THEN_EQ(^)
+                BUILD_OPERATOR_WITH_THEN_EQ(|)
+
+#undef BUILD_OPERATOR_WITH_THEN_EQ
+
                 constexpr inline u128 operator~() const noexcept (!logical_error_detected); 
                 
                 template <u32 > 
@@ -159,6 +174,26 @@ namespace matrix {
                 template <typename T> 
                 constexpr bool operator>= (T const &rhs) const noexcept {
                     return *this >= u128(rhs); 
+                }
+
+                template <bool secure = true> 
+                constexpr operator u64() const noexcept (!secure && !logical_error_detected) {
+                    if constexpr (secure) {
+                        if (std::get<2>(*this) || std::get<3>(*this)) {
+                            throw exception::MatrixBadCastException("Cast to uint64_t but it's out of range! "); 
+                        }
+                    }
+                    return std::get<0>(*this) + ((u64)std::get<1>(*this) << 32); 
+                }
+
+                template <bool secure = true> 
+                constexpr operator u32() const noexcept (!secure && !logical_error_detected) {
+                    if constexpr (secure) {
+                        if (std::get<1>(*this) || std::get<2>(*this) || std::get<3>(*this)) {
+                            throw exception::MatrixBadCastException("Cast to uint32_t but it's out of range! "); 
+                        }
+                    }
+                    return std::get<0>(*this); 
                 }
             
             private: 
