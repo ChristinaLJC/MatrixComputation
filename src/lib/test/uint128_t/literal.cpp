@@ -23,6 +23,7 @@ TEST_METHOD {
 TEST_METHOD {
     // This statement would meets an static-assert error! 
     // auto a = 340282366920938463463374607431768211456_u128; 
+    bassert (true); 
 }
 
 TEST_METHOD {

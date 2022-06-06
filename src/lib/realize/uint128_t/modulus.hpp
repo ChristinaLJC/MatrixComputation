@@ -7,9 +7,10 @@ namespace matrix::inline prelude {
         u128 result; 
         u128 cached = *this; 
         if (!rhs) {
-            throw exception::MatrixZeroDividedException("Mod zero. "); 
+            throw exception::MatrixZeroDividedException("uint128_t has a mod value {zero}. "); 
         }
         helper::divide<GetByIndex>(result, cached, rhs); 
+        // std::clog << "Finish the mod calculation. \n"; 
         return cached; 
     }
 
