@@ -146,6 +146,16 @@ namespace matrix {
                 constexpr inline bool operator ==(u64 ) const noexcept; 
                 constexpr inline bool operator ==(u128 const &) const noexcept; 
 
+                // constexpr inline bool operator !=(u32 other) const noexcept {
+                //     return !(*this == other); 
+                // }
+                // constexpr inline bool operator !=(u64 rhs) const noexcept {
+                //     return !(*this == rhs); 
+                // }
+                // constexpr inline bool operator !=(u128 const &rhs) const noexcept {
+                //     return !(*this == rhs); 
+                // }
+
                 constexpr inline bool operator< (u128 const &) const noexcept; 
                 constexpr inline bool operator<= (u128 const &) const noexcept; 
                 constexpr bool operator> (u128 const &rhs) const noexcept {

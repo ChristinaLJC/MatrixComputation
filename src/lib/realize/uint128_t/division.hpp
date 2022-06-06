@@ -58,7 +58,8 @@ namespace matrix::inline prelude {
             } else if constexpr (i) {
                 return divide_with_same_level_recursively<F, i-1>(lhs, rhs); 
             } else {
-                throw exception::MatrixZeroDividedException("Value divided by zero. "); 
+                // throw exception::MatrixZeroDividedException("Value divided by zero. "); 
+                abort(); 
             }
         }
 
@@ -86,7 +87,7 @@ namespace matrix::inline prelude {
         u128 result; 
         u128 cached = *this; 
         if (!rhs) {
-            throw false; 
+            throw exception::MatrixZeroDividedException ("uint128_t divided by zero. "); 
         }
         helper::divide<GetByIndex>(result, cached, rhs); 
         return result; 
