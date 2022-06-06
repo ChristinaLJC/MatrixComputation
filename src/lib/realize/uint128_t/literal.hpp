@@ -16,26 +16,43 @@ namespace matrix::inline prelude {
             return 0u; 
         }
 
+        template <char... chars, typename = std::enable_if_t<sizeof...(chars) == 0>> 
+        constexpr size_t count_valid_number() {
+            // static_assert (sizeof...(chars) == 0); 
+            return 0u; 
+        }
+
+        template <char c, char... chars> 
+        constexpr size_t count_valid_number() {
+            if constexpr (c == '\'') 
+                return count_valid_number<chars...>(); 
+            else    
+                return 1u + count_valid_number<chars...>(); 
+        }
+
         template <u32 carry, char v, char... chars> 
         constexpr u128 build() {
             static_assert (
                 (v >= '0' && v <= '9') || 
                 (v >= 'a' && v <= 'f') || 
-                (v >= 'A' && v <= 'F')
+                (v >= 'A' && v <= 'F') || 
+                (v == '\'')
             ); 
-            if constexpr (v >= '0' && v <= '9') {
+            if constexpr (v == '\'') {
+                return build<carry, chars...>(); 
+            } else if constexpr (v >= '0' && v <= '9') {
                 static_assert ((u32)(v - '0') < carry); 
-                constexpr auto lhs = carry_value<carry, sizeof...(chars)>() * (u32)(v - '0'); 
+                constexpr auto lhs = carry_value<carry, count_valid_number<chars...>()>() * (u32)(v - '0'); 
                 constexpr auto ans = lhs + build<carry, chars...>(); 
                 static_assert (ans >= lhs); 
                 return ans; 
             } else if constexpr (v >= 'a' && v <= 'f') {
-                constexpr auto lhs = carry_value<carry, sizeof...(chars)>() * (u32)(v - 'a' + 10); 
+                constexpr auto lhs = carry_value<carry, count_valid_number<chars...>()>() * (u32)(v - 'a' + 10); 
                 constexpr auto ans = lhs + build<carry, chars...>(); 
                 static_assert (ans >= lhs); 
                 return ans; 
             } else if constexpr (v >= 'A' && v <= 'F') {
-                constexpr auto lhs = carry_value<carry, sizeof...(chars)>() * (u32)(v - 'A' + 10); 
+                constexpr auto lhs = carry_value<carry, count_valid_number<chars...>()>() * (u32)(v - 'A' + 10); 
                 constexpr auto ans = lhs + build<carry, chars...>(); 
                 static_assert (ans >= lhs); 
                 return ans; 
@@ -76,6 +93,7 @@ namespace matrix::inline prelude {
         template <char... chars> 
         class PrefixUint128_t<'0', chars...> : public LiteralCarry<8u, chars...> {
         }; 
+
     }
 
     template <char... chars> 

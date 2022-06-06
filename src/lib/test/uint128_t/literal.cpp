@@ -30,3 +30,8 @@ TEST_METHOD {
     auto t2 = 20220606_uint128_t; 
     bassert_eq (t, t2); 
 }
+
+TEST_METHOD {
+    u128 special = 0b1'000_u128; 
+    bassert_eq (special, 8u); 
+}
