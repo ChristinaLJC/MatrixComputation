@@ -58,6 +58,11 @@ namespace matrix::exception {
     struct MatrixBadCastException final : public MatrixArithmeticException {
         using MatrixArithmeticException::MatrixArithmeticException; 
     }; 
+
+    struct MatrixNegateException final : public MatrixArithmeticException {
+        using MatrixArithmeticException::MatrixArithmeticException; 
+    }; 
+
 }
 
 #include "def/mtype_traits.hpp"
