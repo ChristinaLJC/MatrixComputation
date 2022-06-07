@@ -6,7 +6,10 @@ namespace matrix {
     inline namespace prelude {
         class uint128_t; 
         using u128 = uint128_t; 
-        class uint128_t : private std::array<u32, 4> {
+        class uint128_t : protected std::array<u32, 4> {
+            protected: 
+                constexpr uint128_t(std::array<u32, 4> const &v): 
+                    std::array<u32, 4>(v) {} 
             public: 
 
                 inline static size_t constexpr DECIMAL_LENGTH = 39; 
