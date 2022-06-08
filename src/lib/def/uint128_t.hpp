@@ -211,6 +211,9 @@ namespace matrix {
             
             private: 
                 struct GetByIndex {
+                    constexpr GetByIndex() = default; 
+                    constexpr GetByIndex(GetByIndex const &) = default; 
+
                     template <size_t k> 
                     constexpr u32 &operator()(u128 &self) const noexcept {
                         return std::get<k>(self); 

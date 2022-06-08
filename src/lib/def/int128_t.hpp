@@ -7,7 +7,14 @@
 namespace matrix::inline prelude {
     class int128_t; 
     using i128 = int128_t; 
+
+    template <char... chars> 
+    i128 constexpr operator""_i128() noexcept; 
+
     class int128_t : private uint128_t {
+
+        template <char... chars> 
+        friend i128 constexpr operator""_i128() noexcept; 
 
         private: 
             constexpr explicit(true) int128_t(uint128_t const &rhs): 
@@ -31,6 +38,16 @@ namespace matrix::inline prelude {
                 v < 0 ? 0xffffffff : 0, 
             }) {} 
             constexpr int128_t(i128 const &) = default; 
+
+            // template <size_t v> 
+            // constexpr u32 &get() noexcept {
+            //     return std::get<v>(*this); 
+            // }
+
+            // template <size_t v> 
+            // constexpr u32 &get() noexcept const {
+            //     return std::get<v>(*this); 
+            // }
 
             inline bool is_negative() const noexcept {
                 return std::get<3>(*this) & 0x80000000; 
@@ -154,6 +171,7 @@ namespace matrix::inline prelude {
             OTHER_TYPE_OP(+)
             OTHER_TYPE_OP(-)
             OTHER_TYPE_OP(*)
+#undef OTHER_TYPE_OP
     
             template <typename Other> 
             constexpr i128 operator/ (Other const &rhs) const {
@@ -165,5 +183,67 @@ namespace matrix::inline prelude {
                 return *this /= i128(rhs); 
                 // return *this; 
             }
+
+            template <bool secure> 
+            constexpr i128 &operator++ () {
+                if constexpr (secure) {
+                    if ((std::array<u32, 4> &)*this == (std::array<u32, 4>) {0xffff'ffffu, 0xffffffffu, 0xffffffffu, 0x7fffffffu}) {
+                        throw exception::MatrixOverflowException("int128_t auto increment operation meets a overflow. "); 
+                    }
+                }
+                (void )this->u128::template operator++ <false> (); 
+                return *this; 
+            }
+
+            using u128::operator bool; 
+
+            constexpr bool operator == (i128 const &rhs) const noexcept {
+                return u128::operator==((u128 &)rhs);     
+            }
+
+            constexpr bool operator < (i128 const &rhs) const noexcept {
+                if (this->is_negative()) { 
+                    if (!rhs.is_negative()) {
+                        return true; 
+                    } else {
+                        return this->u128::operator<((u128 &)rhs); 
+                    }
+                } else {
+                    if (rhs.is_negative()) {
+                        return false; 
+                    } else {
+                        return this->u128::operator<((u128 &)rhs); 
+                    }
+                }
+            }
+
+            constexpr bool operator > (i128 const &rhs) const noexcept {
+                return (*this != rhs && !(*this < rhs)); 
+            }
+            
+            constexpr bool operator <= (i128 const &rhs) const noexcept {
+                return (*this == rhs) || (*this < rhs); 
+            }
+
+            constexpr bool operator >= (i128 const &rhs) const noexcept {
+                return (*this == rhs) || (*this > rhs); 
+            }
+
+#define OTHER_TYPE_OP(symbol) \
+    template <typename _OtherType> \
+    constexpr bool operator symbol (_OtherType const &rhs) const noexcept { \
+        return *this symbol static_cast<i128>(rhs); \
+    } 
+
+            OTHER_TYPE_OP(<)
+            OTHER_TYPE_OP(>)
+            OTHER_TYPE_OP(<=)
+            OTHER_TYPE_OP(>=)
+            OTHER_TYPE_OP(==)
+
+#undef OTHER_TYPE_OP
+
     }; 
 }
+
+#include "realize/int128_t/literal.hpp"
