@@ -232,6 +232,7 @@ namespace matrix::inline prelude {
 #define OTHER_TYPE_OP(symbol) \
     template <typename _OtherType> \
     constexpr bool operator symbol (_OtherType const &rhs) const noexcept { \
+        static_assert (!std::is_same_v<std::decay_t<_OtherType>, u128>); \
         return *this symbol static_cast<i128>(rhs); \
     } 
 
@@ -242,8 +243,26 @@ namespace matrix::inline prelude {
             OTHER_TYPE_OP(==)
 
 #undef OTHER_TYPE_OP
+    
+        template <typename T> 
+        constexpr T into() const; 
+
+        template <> 
+        std::string into() const {
+            return std::string(*this); 
+        }
+
+        operator std::string() const noexcept(!logical_error_detected) {
+            if (this->is_negative()) {
+                using std::literals::operator""s; 
+                return "-"s + (-*this).u128::into<std::string>(); 
+            } else {
+                return this->u128::into<std::string>(); 
+            }
+        }
 
     }; 
+
 }
 
 #include "realize/int128_t/literal.hpp"
