@@ -74,3 +74,55 @@ TEST_METHOD {
     basic += basic; 
     bassert_eq (basic, -8589934590ll); 
 }
+
+TEST_METHOD {
+    i128 basic = -1267650600228229401496703205375_i128; 
+    basic += 1267650600228229401496703205375_i128; 
+    bassert (!basic); 
+}
+
+TEST_METHOD {
+    i128 basic = -83076749736557242056487941267521535_i128; 
+    basic += -83076749736557242056487941267521535_i128; 
+    bassert_eq (basic, -166153499473114484112975882535043070_i128); 
+}
+
+TEST_METHOD {
+    i128 basic = -21267647932558653966460912964485513215_i128; 
+    basic = basic - 21267647932558653966460912964485513215_i128; 
+    bassert_eq ((std::string)basic, "-42535295865117307932921825928971026430"); 
+}
+
+TEST_METHOD {
+    // i128 basic = 170141183460469231731687303715884105728_i128; 
+    
+    // The maximum value of int128_t. 
+    i128 basic = 170141183460469231731687303715884105727_i128; 
+    try {
+        basic.template operator++ <true>(); 
+        bassert(false); 
+    } catch (exception::MatrixArithmeticException const &) {
+        bassert_eq ((std::string)basic, "170141183460469231731687303715884105727"); 
+    }
+}
+
+TEST_METHOD {
+    i128 basic = 170141183460469231731687303715884105727_i128; 
+    try {
+        // basic += basic; 
+        basic .template operator+= <true> (basic); 
+        bassert (false); 
+    } catch (exception::MatrixArithmeticException const &) {
+        bassert_eq (std::string(basic), "170141183460469231731687303715884105727");  
+    }
+}
+
+TEST_METHOD {
+    i128 basic = 170141183460469231731687303715884105727_i128; 
+    try {
+        basic .template operator+= <true> (-basic); 
+        bassert_eq (basic, 0); 
+    } catch (exception::MatrixArithmeticException const &) {
+        bassert (false); 
+    }
+}
