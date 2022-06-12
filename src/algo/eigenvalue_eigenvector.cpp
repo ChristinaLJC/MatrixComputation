@@ -118,8 +118,4 @@ namespace matrix::algorithm {
 
         return result;
     }
-
-
-
 }
-

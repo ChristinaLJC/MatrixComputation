@@ -1,3 +1,18 @@
+namespace matrix::type_traits {
+    template <typename ValueType> 
+    struct DefaultReverseType {
+        using type = ValueType; 
+    }; 
+
+    template <typename MatrixType> 
+    struct DefaultReverseMatrixType; 
+
+    template <template <typename ...> MatrixTemplate, typename ValueType, typename... OtherTypes> 
+    struct DefaultReverseMatrixType<MatrixTemplate<ValueType, OtherTypes...> {
+        using type = MatrixTemplate<typename DefaultReverseType<ValueType>::type, OtherTypes...>; 
+    }; 
+}
+
 namespace matrix::algorithm {
     
     template <typename ResultMatrix = typename type_traits::DefaultInverseMatrixType<OriginMatrix>::type, 
@@ -29,4 +44,3 @@ namespace matrix::algorithm {
         return result;
     }
 }
-
