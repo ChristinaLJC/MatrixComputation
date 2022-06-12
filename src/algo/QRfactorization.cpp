@@ -50,6 +50,7 @@ namespace matrix::algorithm {
             }
         }
 
+        // todo: what are you doing? 
         delete sliced_vector;
 
         return {Q, R};
