@@ -1,21 +1,18 @@
-#include <tuple>
-#include <math.h>
-
-#define NUM 100
+#include "std.hpp" 
 
 namespace matrix::algorithm {
 
     template <typename ResultMatrix = typename type_traits::DefaultInverseMatrixType<OriginMatrix>::type,
             typename OriginMatrix>
-    std::tuple<ResultMatrix, ResultMatrix> QR_factorization(OriginMatrix const &self) {
+    std::tuple<ResultMatrix, ResultMatrix> qr_factorization(OriginMatrix const &self) {
         if (self.row() != self.col()) {
             // throw exception
         }
 
         auto n = self.row(); // the size of the matrix is n*n
 
-        ResultMatrix Q = new_matrix(n, n); // use new_matrix to new a matrix
-        ResultMatrix R = new_matrix(n, n);
+        ResultMatrix q = new_matrix(n, n); // use new_matrix to new a matrix
+        ResultMatrix r = new_matrix(n, n);
 
         ResultMatrix sliced_vector = new_matrix(n, 1);
 
@@ -28,11 +25,11 @@ namespace matrix::algorithm {
             for (int i = 0; i < j; ++i) {
 
                 for (int k = 0; k < N; ++k) {
-                    R[i][j] += Q[k][i] * sliced_vector[k][0];
+                    r[i][j] += q[k][i] * sliced_vector[k][0];
                 }
 
                 for (int k = 0; k < N; ++k) {
-                    sliced_vector[k][0] -= R[i][j] * Q[k][i];
+                    sliced_vector[k][0] -= r[i][j] * q[k][i];
                 }
 
             }
@@ -44,15 +41,15 @@ namespace matrix::algorithm {
             }
             alpha = sqrt(alpha);
 
-            R[j][j] = alpha;
+            r[j][j] = alpha;
 
-            // calculate the current column of Q
+            // calculate the current column of q
             for (int i = 0; i < n; ++i) {
-                Q[i][j] = sliced_vector[i][0] / alpha;
+                q[i][j] = sliced_vector[i][0] / alpha;
             }
         }
 
-        return {Q, R};
+        return {q, r};
     }
 
 
@@ -60,9 +57,9 @@ namespace matrix::algorithm {
             typename OriginMatrix>
     ResultMatrix eigenvalue(OriginMatrix const &self) {
         ResultMatrix temp = self;
-        for (int i = 0; i < NUM; ++i) {
-            auto [Q, R] = QR_factorization(temp);
-            temp = R * Q;
+        for (int i = 0; i < 100; ++i) {
+            auto [q, r] = qr_factorization(temp);
+            temp = r * q;
         }
 
         ResultMatrix result = new_matrix(1, n);
