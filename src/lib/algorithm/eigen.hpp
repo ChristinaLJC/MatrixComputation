@@ -42,4 +42,71 @@ namespace matrix::algorithm {
 
         return {q, r}; 
     }
+
+    template <typename Matrix> 
+    std::vector<Matrix::ValueType> eigenvalue(Matrix const &self) {
+        using ResultType = std::vector<Matrix::ValueType>; 
+        
+        Matrix temp = self; 
+        for (int i = 0; i < 100; ++i) {
+            auto [q, r] = qr_factorization(temp);
+            temp = r * q;
+        }
+
+        ResultType result; 
+        result.reserve(temp.row()); 
+
+        for (int i = 0; i < temp.row(); ++i) {
+            // result[0][i] = temp[i][i];
+            result.push_back(temp[i][j]); 
+        }
+
+        // todo: sort the result
+
+        return result;
+    }
+
+    template <typename ResultDataType = Matrix::ValueType, typename Matrix> 
+    std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>> eigenvector (Matrix const &self) {
+        auto len = self.row(); 
+        if (len != self.col()) {
+            abort(); 
+        }
+        using ReturnType = std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>>; 
+        ReturnType ans; 
+        ans.reserve(len); 
+
+        size_t cnt = 0; 
+        auto eigenvalues = eigenvalue(self); 
+
+        auto last = eigenvalues[0]; 
+        for (size_t i = 0; i < len; ++i) {
+            lassert (i < eigenvalues.size());
+            auto value = eigenvalues[i]; 
+
+            if (i != 0 && last == value) 
+                continue; 
+            
+            Matrix temp = self; 
+            for (size_t j = 0; j < len; ++j) {
+                temp[j][j] -= value; 
+            }
+
+            temp = gaussian_elimination(temp); 
+
+            for (size_t j = 0; j < len; ++j) {
+                if (temp[j][j]) {
+                    auto pivot = temp[j][j]; 
+                    for (size_t k = j; k < len; ++k) {
+                        temp[j][k] /= pivot; 
+                    }
+                } else {
+                    // for (size_t k = 0; k < len; ++k) {
+                    // }
+                    ans.push_back({value, temp[k]}); 
+                }
+            }
+        } 
+        return ans; 
+    }
 }
