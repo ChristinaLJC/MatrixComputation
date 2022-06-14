@@ -10,9 +10,12 @@ namespace matrix {
             using ValueType = ValueType_; 
             template <typename... Args>  
             using ContainerType = ValueContainer_<Args...>; 
+            using Super = ContainerType<ContainerType<ValueType>>; 
             constexpr static bool is_fixed = false; 
             OwnedMatrix(size_t c, size_t r): 
                 ContainerType<ContainerType<ValueType>>(ContainerType<ValueType>(r), c) {}  
+        private: 
+            OwnedMatrix(Super &&self): Super(std::move(self)) {} 
         public: 
             struct Visiter{
                 ContainerType<ValueType> &self; 
@@ -48,6 +51,12 @@ namespace matrix {
                 lassert (this->size()); 
                 // return (*this)[0].self.size(); 
                 return this->ContainerType<ContainerType<ValueType>>::operator [](0).size(); 
+            }
+
+            OwnedMatrix operator+(OwnedMatrix const &rhs) const {
+                // return this->Super::operator+((Super&)rhs); 
+                // return operator+((Super&)*this, (Super&)rhs);
+                return OwnedMatrix ((Super&)*this + (Super&)rhs); 
             }
     }; 
 }
