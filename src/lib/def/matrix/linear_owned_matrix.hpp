@@ -1,6 +1,24 @@
 #pragma once 
 
 #include "std.hpp" 
+#include "def/mexception.hpp"
+
+namespace matrix::exception {
+    struct MatrixStructureException : public MatrixBaseException {
+        using MatrixBaseException::MatrixBaseException; 
+        ~MatrixStructureException() = 0; 
+    }; 
+
+    MatrixStructureException::~MatrixStructureException() {} 
+
+    struct MatrixStructureMismatchingException : public MatrixStructureException {
+        using MatrixStructureException::MatrixStructureException; 
+    }; 
+
+    struct MatrixStructureNullException : public MatrixStructureException {
+        using MatrixStructureException::MatrixStructureException; 
+    }; 
+}
 
 namespace matrix {
     template <typename ValueType_, template <typename ...> typename ValueContainer_ = std::valarray> 
@@ -17,10 +35,19 @@ namespace matrix {
             constexpr static bool is_fixed = false; 
             
         private: 
-            LinearOwnedMatrix(Super &&self, size_t row): Super(std::move(self)), m_row(row) {} 
+            LinearOwnedMatrix(Super &&self, size_t row): Super(std::move(self)), m_row(row) {
+                lassert (size());
+                // if (!size()) {
+                //     throw MatrixStructureNullException
+                // }
+            } 
         public: 
             LinearOwnedMatrix(size_t r, size_t c): 
-                ContainerType<ValueType>(r * c), m_row(r) {}  
+                ContainerType<ValueType>(r * c), m_row(r) {
+                    if (!r || !c) {
+                        throw matrix::exception::MatrixStructureNullException ("LinearOwnedMatrix cannot be initialized as empty size. "); 
+                    }
+                }  
 
             struct Visiter{
                 LinearOwnedMatrix &self; 
@@ -37,7 +64,7 @@ namespace matrix {
                 ConstVisitor(LinearOwnedMatrix const &self, size_t row): self(self), row(row) {} 
                 ValueType const &operator[] (size_t index) {
                     lassert (index < self.size() / self.row()); 
-                    return (Super&)self[row * (self.size() / self.row()) + index]; 
+                    return ((Super const &)self)[row * (self.size() / self.row()) + index]; 
                 }
             }; 
 
@@ -48,7 +75,7 @@ namespace matrix {
 
             ConstVisitor operator[] (size_t index) const {
                 lassert (index < m_row);
-                return Visiter(*this, index); 
+                return ConstVisitor(*this, index); 
             }
             
             size_t row() const noexcept {
@@ -65,20 +92,43 @@ namespace matrix {
 
             LinearOwnedMatrix operator+(LinearOwnedMatrix const &rhs) const {
                 auto row = m_row; 
+                // Throw an exception describes the mismatching of the matrix. 
+                Use matrix::exception; 
                 if (rhs.row() != row) {
-                    lassert (false); 
-                    // Throw an exception describes the mismatching of the matrix. 
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix addition with the mismatched row value. "); 
+                } else if (size() != rhs.size()) {
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix addition with the mismatched col value. "); 
                 }
                 return LinearOwnedMatrix ((Super&)*this + (Super&)rhs, row); 
             }
 
             LinearOwnedMatrix operator-(LinearOwnedMatrix const &rhs) const {
+                Use matrix::exception; 
                 auto row = m_row; 
                 if (rhs.row() != row) {
-                    lassert (false); 
-                    // Throw an exception describes the mismatching of the matrix. 
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix addition with the mismatched row value. "); 
+                } else if (size() != rhs.size()) {
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix addition with the mismatched col value. "); 
                 }
                 return LinearOwnedMatrix ((Super&)*this - (Super&)rhs, row); 
+            }
+
+            LinearOwnedMatrix operator*(ValueType const &rhs) const {
+                return LinearOwnedMatrix ((Super&)*this * rhs, row()); 
+            }
+
+            LinearOwnedMatrix operator/(ValueType const &rhs) const {
+                return LinearOwnedMatrix ((Super&)*this / rhs, row()); 
+            }
+
+            LinearOwnedMatrix transposition() const {
+                This ans (size() / row(), row()); 
+                for (size_t r = 0; r < size() / row(); ++r) {
+                    for (size_t c = 0; c < row(); ++c) {
+                        ans[r][c] = (*this)[c][r]; 
+                    }
+                }
+                return ans; 
             }
 
             static LinearOwnedMatrix with_size(size_t k) {
