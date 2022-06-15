@@ -131,6 +131,75 @@ namespace matrix {
                 return ans; 
             }
 
+            using Super::max; 
+            using Super::min; 
+            using Super::sum; 
+
+            ValueType avg() const {
+                return sum() / size(); 
+            }
+
+            // What is this? 
+            LinearOwnedMatrix determinant_cut(LinearOwnedMatrix const &matrix, size_t size, size_t i){ //should be private
+                This temp (size, size);
+                for (size_t r = 0; r < size; ++r) {
+                    for (size_t c = 0; c < size; ++c) {
+                        temp[r][c] = matrix[r + 1][c + (c >= i)];
+                    }
+                }
+                return temp;
+            }
+
+            ValueType determinant_calculate(LinearOwnedMatrix const &matrix, size_t size){ //should be private
+                if (size == 1){
+                    return matrix[0][0];
+                }
+                ValueType ans{};
+                for (size_t i = 0; i < size; ++i){
+                    ans = ans + matrix[0][i] * determinant_calculate(matrix, determinant_cut(size - 1, i),size - 1) * (i % 2 ? -1 : 1);
+                }
+                return ans;
+            }
+
+            ValueType determinant() const {
+                Use matrix::exception;
+                auto row = m_row;
+                if (row != (size() / row)){
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix determinant with non-square matrix. ");
+                }
+                return determinant_calculate(row);
+            }
+
+            ValueType trace() const {
+                Use matrix::exception;
+                auto row = m_row;
+                if (row != (size() / row)){
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix trace with non-square matrix. ");
+                }
+                ValueType trace{};
+                for (size_t i = 0; i < size(); i++){
+                    trace = trace + (*this)[i][i];
+                }
+                return trace;
+            }
+
+            LinearOwnedMatrix cross_product(LinearOwnedMatrix const &rhs) const {
+                Use matrix::exception;
+                auto row = m_row;
+                if (size() / row != rhs.row()) {
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix cross product with the mismatched matrix size. ");
+                }
+                This ans(row, rhs.size() / rhs.row());
+                for (size_t r = 0; r < row; ++r){
+                    for (size_t c = 0; c < rhs.size() / rhs.row(); ++c) {
+                        for (size_t k = 0; k < size() / row; ++k){
+                            ans[r][c] += ((*this)[r][k] * rhs[k][c]);
+                        }
+                    }
+                }
+                return ans;
+            }
+
             static LinearOwnedMatrix with_size(size_t k) {
                 // if (std::numeric_limits<size_t>::max() / k < k) {
                 //     abort(); 
