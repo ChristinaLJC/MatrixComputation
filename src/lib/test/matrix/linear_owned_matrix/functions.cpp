@@ -120,3 +120,4 @@ TEST_METHOD {
     bassert_eq(y[0][1], 4);
     bassert_eq(y[0][2], 16);
 }
+
