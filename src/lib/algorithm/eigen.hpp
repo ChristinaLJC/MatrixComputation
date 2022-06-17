@@ -93,7 +93,7 @@ namespace matrix::algorithm {
                 temp[j][j] -= value; 
             }
 
-            temp = gaussian_elimination(temp); 
+            gaussian_elimination(temp); 
 
             for (size_t j = 0; j < len; ++j) {
                 if (temp[j][j]) {
@@ -109,5 +109,38 @@ namespace matrix::algorithm {
             }
         } 
         return ans; 
+    }
+
+    template <typename ResultMatrix = typename type_traits::DefaultInverseMatrixType<OriginMatrix>::type,
+            typename OriginMatrix>
+    void gaussian_elimination(OriginMatrix const &self) {
+        int n = self.row();
+        for (size_t i = 0; i < n; ++i) {
+            auto pivot = self[i][i];
+            if (pivot == 0) {
+                for (size_t j = i + 1; j < n; ++j) {
+                    if (self[j][i] != 0) {
+                        for (size_t k = 0; k < n; ++k) {
+                            auto temp = self[j][k];
+                            self[j][k] = self[i][k];
+                            self[i][k] = temp;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            pivot = self[i][i];
+            if (pivot == 0) continue;
+
+            for (size_t j = i + 1; j < n; ++j) {
+                auto temp = self[j][i];
+                if (temp == 0) continue;
+
+                for (size_t k = 0; k < n; ++k) {
+                    self[j][k] = self[j][k] - (double) self[j - 1][k] * temp / pivot;
+                }
+            }
+        }
     }
 }
