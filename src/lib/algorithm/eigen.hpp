@@ -15,8 +15,8 @@ namespace matrix::algorithm {
 
         std::vector<Matrix::ValueType> sliced_vector (len); 
 
-        for (size_t j = 0; j < n; ++j) {
-            for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < len; ++j) {
+            for (size_t i = 0; i < len; ++i) {
                 sliced_vector[i] = self[i][j]; 
             }
             for (size_t i = 0; i < j; ++i) {
@@ -61,6 +61,7 @@ namespace matrix::algorithm {
             result.push_back(temp[i][j]); 
         }
 
+        sort(result.begin(), resul.end());
         // todo: sort the result
 
         return result;
