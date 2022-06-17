@@ -47,6 +47,8 @@ namespace matrix {
             using ContainerType = ValueContainer_<Args...>; 
             using Super = ContainerType<ValueType>; 
             using This = LinearOwnedMatrix; 
+            template <typename OtherDataType> 
+            using MatrixOfType = LinearOwnedMatrix<OtherDataType>; 
 
             constexpr static bool is_fixed = false; 
             
@@ -57,15 +59,27 @@ namespace matrix {
                 //     throw MatrixStructureNullException
                 // }
             } 
+        private: 
+            void row_col_upperbound_check(size_t row, size_t col) {
+                if (!row || !col) {
+                    throw matrix::exception::MatrixStructureNullException ("LinearOwnedMatrix cannot be initialized as empty size. "); 
+                } else if (std::numeric_limits<size_t>::max() / row < col) {
+                    throw matrix::exception::MatrixStructureInvalidSizeException ("LinearOwnedMatrix cannot occupy a size larger than size_t type. "); 
+                }
+            }
+
         public: 
             LinearOwnedMatrix(size_t r, size_t c): 
                 ContainerType<ValueType>(r * c), m_row(r) {
-                    if (!r || !c) {
-                        throw matrix::exception::MatrixStructureNullException ("LinearOwnedMatrix cannot be initialized as empty size. "); 
-                    } else if (std::numeric_limits<size_t>::max() / r < c) {
-                        throw matrix::exception::MatrixStructureInvalidSizeException ("LinearOwnedMatrix cannot occupy a size larger than size_t type. "); 
-                    }
+                    row_col_upperbound_check(r, c); 
                 }  
+            
+            template <typename T, template <typename ...> typename Container> 
+            LinearOwnedMatrix(LinearOwnedMatrix<T, Container> const &self): Super(self.size()), m_row(self.row()) {
+                for (size_t i{}; i < self.size(); ++i) {
+                    ((Super&)*this)[i] = self[i / self.row()][i % self.row()]; 
+                }
+            }
 
             struct Visiter{
                 LinearOwnedMatrix &self; 

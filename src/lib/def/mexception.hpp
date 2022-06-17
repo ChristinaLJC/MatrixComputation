@@ -63,6 +63,10 @@ namespace matrix::exception {
         using MatrixArithmeticException::MatrixArithmeticException; 
     }; 
 
+    struct MatrixNotRealizeException final : public MatrixBaseException {
+        using MatrixBaseException::MatrixBaseException; 
+    }; 
+
 }
 
 #include "def/mtype_traits.hpp"
@@ -131,3 +135,8 @@ namespace matrix::exception {
     } while (0); 
 
 #define bassert_ne BASSERT_NE
+
+#define TODO(statement) \
+    throw matrix::exception::MatrixNotRealizeException( __FILE__ ":" STRING(__LINE__) " TODO Exception: " #statement );
+
+#define todo TODO
