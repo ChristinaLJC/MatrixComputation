@@ -18,6 +18,22 @@ namespace matrix::exception {
     struct MatrixStructureNullException : public MatrixStructureException {
         using MatrixStructureException::MatrixStructureException; 
     }; 
+
+    struct MatrixStructureInvalidSizeException : public MatrixStructureException {
+        using MatrixStructureException::MatrixStructureException; 
+    }; 
+}
+
+namespace matrix::type_traits {
+    template <typename T> 
+    struct TypeUpgrade {
+        using type = double; 
+    }; 
+
+    template <typename T> 
+    struct TypeUpgrade <std::complex<T>> {
+        using type = std::complex<typename TypeUpgrade<T>::type>; 
+    }; 
 }
 
 namespace matrix {
@@ -46,6 +62,8 @@ namespace matrix {
                 ContainerType<ValueType>(r * c), m_row(r) {
                     if (!r || !c) {
                         throw matrix::exception::MatrixStructureNullException ("LinearOwnedMatrix cannot be initialized as empty size. "); 
+                    } else if (std::numeric_limits<size_t>::max() / r < c) {
+                        throw matrix::exception::MatrixStructureInvalidSizeException ("LinearOwnedMatrix cannot occupy a size larger than size_t type. "); 
                     }
                 }  
 
