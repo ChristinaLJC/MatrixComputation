@@ -85,3 +85,11 @@ TEST_METHOD {
     matrix[0][0] = 1i; 
     bassert_eq (matrix[0][0], 1i); 
 }
+
+TEST_METHOD {
+    auto matrix = LinearOwnedMatrix<int>(3, 4); 
+    LinearOwnedMatrix<float> f = matrix; 
+    // bassert_eq (f.row(), 3); 
+    // bassert_eq (f.col(), 4); 
+    // bassert_eq (f.size(), 12); 
+}
