@@ -16,6 +16,16 @@ namespace matrix {
             
             SparseOwnedMatrix(size_t row, size_t col): row(row), col(col) {} 
 
+            static This with_identity_size (size_t v) {
+                auto ans = This(v, v); 
+                for (size_t k = 0; k < v; ++k) 
+                    ans[k][k] = 1; 
+            }
+
+            static This with_size (size_t v) {
+                return This(v, v); 
+            }
+
             struct Visitor {
                 This &self; 
                 size_t row; 
