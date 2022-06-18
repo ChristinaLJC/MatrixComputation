@@ -214,7 +214,7 @@ namespace matrix::algorithm {
 
             gaussian_elimination_as_mut(temp); 
 
-            std::cout << "cur value: " << value << std::endl;
+            // std::cout << "cur value: " << value << std::endl;
             for (size_t i = 0; i < temp.row(); ++i) {
                 for (size_t j = 0; j < temp.col(); ++j) {
                     std::cout << temp[i][j] << " ";
