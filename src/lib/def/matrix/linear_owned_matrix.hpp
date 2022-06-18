@@ -26,6 +26,10 @@ namespace matrix::exception {
     struct MatrixStructureDeterminantEqualsZeroException : public MatrixStructureException {
         using MatrixStructureException::MatrixStructureException;
     };
+
+    struct MatrixNonSquareException : public MatrixStructureException {
+        using MatrixStructureException::MatrixStructureException; 
+    }; 
 }
 
 namespace matrix::type_traits {

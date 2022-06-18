@@ -2,18 +2,29 @@
 
 #include "std.hpp" 
 
+#include "def/matrix/linear_owned_matrix.hpp"
+
+#include "zero_judge.hpp"
+
 namespace matrix::algorithm {
-    template <typename Matrix> 
-    std::pair<Matrix, Matrix> qr_factorization(Matrix const &self) {
+    template <typename Matrix, typename DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type>  
+    std::pair<typename Matrix::template MatrixOfType<DataType>, typename Matrix::template MatrixOfType<DataType>> qr_factorization(Matrix const &self) {
         auto len = self.row(); 
         if (len != self.col()) {
-            abort(); 
+            throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
         }
 
-        Matrix q = Matrix::with_size(len); 
-        Matrix r = Matrix::with_size(len); 
+        static_assert (
+            std::is_same_v< 
+                typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type, 
+                DataType> 
+        ); 
+        // using DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type; 
 
-        std::vector<typename Matrix::ValueType> sliced_vector (len); 
+        auto q = Matrix::template MatrixOfType<DataType>::with_size(len); 
+        auto r = Matrix::template MatrixOfType<DataType>::with_size(len); 
+
+        std::vector<DataType> sliced_vector (len); 
 
         for (size_t j = 0; j < len; ++j) {
             for (size_t i = 0; i < len; ++i) {
@@ -28,7 +39,7 @@ namespace matrix::algorithm {
                 }
             }
 
-            double alpha = 0; 
+            DataType alpha {}; 
             for (int i = 0; i < len; ++i) {
                 alpha += sliced_vector[i] * sliced_vector[i];
             }
@@ -40,15 +51,21 @@ namespace matrix::algorithm {
             }
         }
 
+        // todo: examine the deep copy happen or not. 
         return {q, r}; 
     }
 
     template <typename Matrix> 
-    std::vector<typename Matrix::ValueType> eigenvalue(Matrix const &self) {
-        using ResultType = std::vector<typename Matrix::ValueType>; 
+    auto eigenvalue(Matrix const &self) {
+
+        constexpr int attempt_cnt = 100; 
+
+        // using ResultType = std::vector<typename Matrix::ValueType>; 
+        using DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type; 
+        using ResultType = std::vector<DataType>; 
         
-        Matrix temp = self; 
-        for (int i = 0; i < 100; ++i) {
+        typename Matrix::template MatrixOfType<DataType> temp = self; 
+        for (int i = 0; i < attempt_cnt; ++i) {
             auto [q, r] = qr_factorization(temp);
             temp = r * q;
         }
@@ -66,11 +83,11 @@ namespace matrix::algorithm {
         return result;
     }
 
-    template <typename Matrix, typename ResultDataType = typename Matrix::ValueType> 
-    std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>> eigenvector (Matrix const &self) {
+    template <typename Matrix, typename ResultDataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type> 
+    auto eigenvector (Matrix const &self) {
         auto len = self.row(); 
         if (len != self.col()) {
-            abort(); 
+            throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
         }
         using ReturnType = std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>>; 
         ReturnType ans; 
@@ -92,7 +109,7 @@ namespace matrix::algorithm {
                 temp[j][j] -= value; 
             }
 
-            gaussian_elimination(temp); 
+            gaussian_elimination_as_mut(temp); 
 
             for (size_t j = 0; j < len; ++j) {
                 if (temp[j][j]) {
@@ -110,6 +127,52 @@ namespace matrix::algorithm {
         } 
         return ans; 
     } 
+
+    template <typename Matrix> 
+    auto gaussian_elimination_as_mut(Matrix &self) {
+        // using DataType = typename type_traits::TypeUpgrade<typename OriginMatrix::ValueType>::type; 
+        // using ResultType = typename OriginMatrix::template MatrixOfType<DataType>; 
+        // ResultType self = self_; 
+        size_t row = self.row(); 
+
+        // std::vector<size_t> permutation (row); 
+        // for (size_t i = 0; i < row; ++i) 
+        //     permutation[i] = i; 
+        
+        for (size_t i = 0; i < row; ++i) {
+            auto col = self.col(); 
+            if (i >= col) 
+                break; 
+            
+            auto pivot = self[i][i]; 
+
+            if (is_nearly_zero(pivot)) {
+                size_t j; 
+                for (j = i + 1; j < row; ++j) {
+                    if (!is_nearly_zero(self[j][i])) {
+                        // std::swap(permutation[i], permutation[j]); 
+                        for (size_t k {}; k < col; ++k) {
+                            std::swap(self[i][k], self[j][k]); 
+                        }
+                        break; 
+                    } 
+                }
+                if (j == row) {
+                    return i; 
+                }
+            }
+
+            for (size_t j = i + 1; j < row; ++j) {
+                auto divisor = self[j][i] / pivot; 
+                self[j][i] = {}; 
+                for (size_t k = i + 1; k < col; ++k) {
+                    self[j][k] -= self[i][k] * divisor; 
+                }
+            }
+        }
+
+        return row; 
+    }
 
     template <typename OriginMatrix> 
     auto gaussian_elimination(OriginMatrix const &self_) {
@@ -149,36 +212,8 @@ namespace matrix::algorithm {
                     self[permutation[j]][k] -= self[permutation[i]][k] * divisor; 
                 }
             }
-            // for (size_t j = 0; j < )
         }
 
         return self; 
-
-        // for (size_t i = 0; i < n; ++i) {
-        //     auto pivot = self[i][i];
-        //     if (is_nearly_zero(pivot)) {
-        //         for (size_t j = i + 1; j < n; ++j) {
-        //             if (!is_nearly_zero(self[j][i])) { 
-        //                 // You have no need to write so complicated codes to exchange them, todo: use a better memory allocation. 
-        //                 for (size_t k = 0; k < n; ++k) {
-        //                     std::swap(self[j][k], self[i][k]); 
-        //                 }
-        //                 break;
-        //             } 
-        //         }
-        //     }
-
-        //     pivot = self[i][i];
-        //     if (pivot == 0) continue;
-
-        //     for (size_t j = i + 1; j < n; ++j) {
-        //         auto temp = self[j][i];
-        //         if (temp == 0) continue;
-
-        //         for (size_t k = 0; k < n; ++k) {
-        //             self[j][k] = self[j][k] - (double) self[j - 1][k] * temp / pivot;
-        //         }
-        //     }
-        // }
     }
 }
