@@ -114,7 +114,7 @@ namespace matrix::algorithm {
             gaussian_elimination_as_mut(temp); 
 
             for (size_t j = 0; j < len; ++j) {
-                if (!type_traits::is_nearly_zero(temp[j][j])) {
+                if (!is_nearly_zero(temp[j][j])) {
                     auto pivot = temp[j][j]; 
                     for (size_t k = j; k < len; ++k) {
                         temp[j][k] /= pivot; 
@@ -123,10 +123,10 @@ namespace matrix::algorithm {
                     // for (size_t k = 0; k < len; ++k) {
                     // }
                     std::vector<ResultDataType> t; 
-                    t.resize(col); 
+                    t.resize(len); 
                     for (size_t k = 0; k < len; ++k) 
                         t[k] = temp[j][k]; 
-                    ans.push_back({value, std::move(k)}); 
+                    ans.push_back({value, std::move(t)}); 
                     // todo("")
                 }
             }
