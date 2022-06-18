@@ -140,7 +140,8 @@ namespace matrix::type_traits {
     bool is_nearly_same(Lhs const &lhs, Rhs const &rhs) {
         if constexpr (IsComplex<Lhs>::value || IsComplex<Rhs>::value) {
             return algorithm::is_nearly_zero(lhs - (Lhs)rhs); 
-        } else if constexpr ((!std::numeric_limits<Lhs>::is_integer || !std::numeric_limits<Rhs>::is_integer) && CanDoMinus<Lhs, Rhs>::value) {
+        } else if constexpr ((!std::numeric_limits<Lhs>::is_integer || !std::numeric_limits<Rhs>::is_integer) && CanDoMinus<Lhs, Rhs>::value && 
+            !std::is_class_v<Lhs> && !std::is_class_v<Rhs>) {
             return algorithm::is_nearly_zero(lhs - rhs); 
         } else {
             return lhs == rhs; 
