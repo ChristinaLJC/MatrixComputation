@@ -188,15 +188,33 @@ namespace matrix::algorithm {
             lassert (i < eigenvalues.size());
             auto value = eigenvalues[i]; 
 
-            if (i != 0 && last == value) 
+            // std::cout << "last: " << last << "\nvalue: " << value << "\ni:" << i << "\n";
+            static_assert (std::is_same_v<decltype(value), double>); 
+            if (i != 0 && type_traits::is_nearly_same(last, value)) {
                 continue; 
-            
-            Matrix temp = self; 
+            }
+                
+            typename Matrix::template MatrixOfType<double> temp = self; 
             for (size_t j = 0; j < len; ++j) {
                 temp[j][j] -= value; 
             }
 
+            for (size_t i = 0; i < temp.row(); ++i) {
+                for (size_t j = 0; j < temp.col(); ++j) {
+                    std::cout << temp[i][j] << " ";
+                }
+                std::cout << "\n";
+            }
+
             gaussian_elimination_as_mut(temp); 
+
+            std::cout << "cur value: " << value << std::endl;
+            for (size_t i = 0; i < temp.row(); ++i) {
+                for (size_t j = 0; j < temp.col(); ++j) {
+                    std::cout << temp[i][j] << " ";
+                }
+                std::cout << "\n";
+            }
 
             for (size_t j = 0; j < len; ++j) {
                 if (!is_nearly_zero(temp[j][j])) {
@@ -212,6 +230,7 @@ namespace matrix::algorithm {
                     cnt++;
                 }
             }
+            last = value;
         } 
         return ans; 
     } 
