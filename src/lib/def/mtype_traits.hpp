@@ -13,6 +13,14 @@ namespace matrix::type_traits {
         }; 
     }; 
 
+    template <typename T, typename = void> 
+    struct IsComplexStringize: public std::false_type {
+    }; 
+
+    template <typename T> 
+    struct IsComplexStringize <T, std::void_t< decltype(std::declval<T>().real()), decltype(std::declval<T>().imag()) >> : 
+        public std::true_type {}; 
+
     template <typename T> 
     std::string stringizing (T const &v) {
 
@@ -40,17 +48,7 @@ namespace matrix::type_traits {
             return std_to_string_output(v); 
         } else if constexpr (decltype(type_traits::is_impl(fetch_name_trait)(v))::value) {
             return fetch_name_trait(v); 
-        } else if constexpr (requires {
-            // v.real; 
-            // v.imag; 
-            { stringizing(v.real()) + " + " + stringizing(v.imag()) + "i" } -> 
-                #if __cplusplus >= 202002l 
-                    std::same_as<std::string> 
-                #else 
-                    std::string 
-                #endif
-                    ; 
-        }) {
+        } else if constexpr (IsComplexStringize<decltype(v)>::value) {
             return stringizing(v.real()) + " + " + stringizing(v.imag()) + "i"; 
         }
         return "[Not Realize String Trait]"; 

@@ -17,7 +17,6 @@ TEST_METHOD {
     auto s = LinearOwnedMatrix<std::complex<int>>::with_identity_size(3); 
     Use std::literals; 
     s[0][1] = 1i; 
-    
     auto s2 = ~s; 
     bassert_ne (s, s2); 
 }
