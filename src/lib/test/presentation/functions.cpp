@@ -155,7 +155,12 @@ TEST_METHOD {
     x[0][1] = 2;
     x[1][0] = -1;
     x[1][1] = -3;
-    bassert_eq (x.determinant(), -1);
+    auto ans = x.inverse();
+    
+    bassert_eq (ans[0][0], 3); 
+    bassert_eq (ans[0][1], 2); 
+    bassert_eq (ans[1][0], -1); 
+    bassert_eq (ans[1][1], -1); 
 }
 
 TEST_METHOD {
@@ -164,12 +169,7 @@ TEST_METHOD {
     x[0][1] = 2;
     x[1][0] = -1;
     x[1][1] = -3;
-    auto ans = x.inverse();
-    
-    bassert_eq (ans[0][0], 3); 
-    bassert_eq (ans[0][1], 2); 
-    bassert_eq (ans[1][0], -1); 
-    bassert_eq (ans[1][1], -1); 
+    bassert_eq (x.determinant(), -1);
 }
 
 TEST_METHOD {

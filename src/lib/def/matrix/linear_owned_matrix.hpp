@@ -220,6 +220,38 @@ namespace matrix {
                 return sum() / size();
             }
 
+            ValueType max(size_t r0, size_t r1, size_t c0, size_t c1) const {
+                Use matrix::exception;
+                if (r1 < r0 || c1 < c0 || r0 > row() || r1 > row() || c0 > col() || c1 > col()){
+                    throw MatrixStructureInvalidSizeException("LinearOwnedMatrix max with invalid size");
+                }
+                return slice(r0, r1, c0, c1).max();
+            }
+                        
+            ValueType min(size_t r0, size_t r1, size_t c0, size_t c1) const {
+                Use matrix::exception;
+                if (r1 < r0 || c1 < c0 || r0 > row() || r1 > row() || c0 > col() || c1 > col()){
+                    throw MatrixStructureInvalidSizeException("LinearOwnedMatrix min with invalid size");
+                }
+                return slice(r0, r1, c0, c1).min();
+            }
+
+            ValueType sum(size_t r0, size_t r1, size_t c0, size_t c1) const {
+                Use matrix::exception;
+                if (r1 < r0 || c1 < c0 || r0 > row() || r1 > row() || c0 > col() || c1 > col()){
+                    throw MatrixStructureInvalidSizeException("LinearOwnedMatrix sum with invalid size");
+                }
+                return slice(r0, r1, c0, c1).sum();
+            }
+
+            ValueType avg(size_t r0, size_t r1, size_t c0, size_t c1) const {
+                Use matrix::exception;
+                if (r1 < r0 || c1 < c0 || r0 > row() || r1 > row() || c0 > col() || c1 > col()){
+                    throw MatrixStructureInvalidSizeException("LinearOwnedMatrix avg with invalid size");
+                }
+                return slice(r0, r1, c0, c1).avg();
+            }
+
             ValueType determinant() const {
                 Use matrix::exception;
                 size_t row = m_row;
