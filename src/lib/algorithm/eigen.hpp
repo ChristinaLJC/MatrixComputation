@@ -53,6 +53,19 @@ namespace matrix::algorithm {
         return {q, r}; 
     }
 
+    namespace helper {
+        struct ComplexComp {
+            template <typename T> 
+            bool operator () (T const &lhs, T const &rhs) const {
+                if constexpr (type_traits::IsComplex<T>::value) {
+                    return abs(lhs) < abs(rhs); 
+                } else {
+                    return lhs < rhs; 
+                }
+            } 
+        }; 
+    }
+
     template <typename Matrix> 
     auto eigenvalue(Matrix const &self) {
 
@@ -76,7 +89,7 @@ namespace matrix::algorithm {
             result.push_back(temp[i][i]); 
         }
 
-        sort(result.begin(), result.end());
+        sort(result.begin(), result.end(), helper::ComplexComp{});
 
         return result;
     }

@@ -4,5 +4,7 @@
 Use matrix; 
 
 TEST_METHOD {
-
+    LinearOwnedMatrix<std::complex<float>> x (2, 2); 
+    // x.trace(); 
+    auto e = matrix::algorithm::eigenvalue(x); 
 }
