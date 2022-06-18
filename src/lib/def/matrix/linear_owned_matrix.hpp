@@ -438,6 +438,16 @@ namespace matrix {
                 }
                 return true; 
             }
+
+            template <typename InnerType, typename CV_Mat> 
+            static This from_cv_mat(CV_Mat const &self) {
+                This ans (self.rows, self.cols); 
+                for (size_t i = 0; i < self.rows; ++i) {
+                    for (size_t j = 0; j < self.cols; ++j) {
+                        ans[i][j] = self.at<InnerType>(i, j); 
+                    }
+                }
+            }
     };
     
 }
