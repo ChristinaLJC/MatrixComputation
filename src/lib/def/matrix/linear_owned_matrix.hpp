@@ -354,7 +354,7 @@ namespace matrix {
             }
 
             This operator~ () const {
-                return (this->apply(std::conj), col()); 
+                return (this->apply(std::conj), row()); 
             }
     };
     
