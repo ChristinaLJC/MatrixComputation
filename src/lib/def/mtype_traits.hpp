@@ -43,7 +43,7 @@ namespace matrix::type_traits {
         } else if constexpr (requires {
             // v.real; 
             // v.imag; 
-            { stringizing(v.real()) + " + " + stringizing(v.imag()) + "i" } -> std::same_as<std::string>; 
+            { stringizing(v.real()) + " + " + stringizing(v.imag()) + "i" } -> std::string; 
         }) {
             return stringizing(v.real()) + " + " + stringizing(v.imag()) + "i"; 
         }
@@ -101,7 +101,7 @@ namespace matrix::algorithm {
             // return v <= std::numeric_limits<std::decay_t<NumberType>>::epsilon() && 
             //     v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
         } else {
-            return v >= 1e-6 && v <= -1e-6; 
+            return v <= 1e-6 && v >= -1e-6; 
         }
     }
 }

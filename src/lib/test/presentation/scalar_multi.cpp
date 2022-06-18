@@ -13,7 +13,7 @@ TEST_METHOD {
     matrix[1][2] = 4.5;
     matrix[2][1] = 5.7;
     auto result = matrix * 6;
-    bassert_eq (result[1][2], 27);
+    bassert_eq (result[1][2], 27.0);
     bassert_eq (result[2][1], 34.2);
 }
 
@@ -22,7 +22,7 @@ TEST_METHOD {
     vector[1][0] = 4.5;
     vector[2][0] = 5.7;
     auto result = vector * 2;
-    bassert_eq (result[1][0], 9);
+    bassert_eq (result[1][0], 9.0);
     bassert_eq (result[2][0], 11.4);
 }
 
