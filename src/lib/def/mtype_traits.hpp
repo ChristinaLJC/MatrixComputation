@@ -43,7 +43,13 @@ namespace matrix::type_traits {
         } else if constexpr (requires {
             // v.real; 
             // v.imag; 
-            { stringizing(v.real()) + " + " + stringizing(v.imag()) + "i" } -> std::string; 
+            { stringizing(v.real()) + " + " + stringizing(v.imag()) + "i" } -> 
+                #if __cplusplus >= 202002l 
+                    std::same_as<std::string> 
+                #else 
+                    std::string 
+                #endif
+                    ; 
         }) {
             return stringizing(v.real()) + " + " + stringizing(v.imag()) + "i"; 
         }
