@@ -199,12 +199,12 @@ namespace matrix::algorithm {
             auto value = eigenvalues[i]; 
 
             // std::cout << "last: " << last << "\nvalue: " << value << "\ni:" << i << "\n";
-            static_assert (std::is_same_v<decltype(value), double>); 
+            // static_assert (std::is_same_v<decltype(value), double>); 
             if (i != 0 && type_traits::is_nearly_same(last, value)) {
                 continue; 
             }
                 
-            typename Matrix::template MatrixOfType<double> temp = self; 
+            typename Matrix::template MatrixOfType<ResultDataType> temp = self; 
             for (size_t j = 0; j < len; ++j) {
                 temp[j][j] -= value; 
             }
