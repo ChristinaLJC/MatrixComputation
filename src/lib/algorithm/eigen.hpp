@@ -94,56 +94,6 @@ namespace matrix::algorithm {
         return result;
     }
 
-    template <typename Matrix, typename ResultDataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type> 
-    auto eigenvector (Matrix const &self) {
-        auto len = self.row(); 
-        if (len != self.col()) {
-            throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
-        }
-
-        using ResultType = std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>>; 
-
-        using SuggestedMatrix = typename Matrix::template MatrixOfType<ResultDataType>; 
-
-        ResultType ans; 
-        ans.reserve(len); 
-
-        size_t cnt = 0; 
-        auto eigenvalues = eigenvalue(self); 
-
-        auto last = eigenvalues[0]; 
-        for (size_t i = 0; i < len; ++i) {
-            lassert (i < eigenvalues.size());
-            auto value = eigenvalues[i]; 
-
-            if (i != 0 && last == value) 
-                continue; 
-            
-            Matrix temp = self; 
-            for (size_t j = 0; j < len; ++j) {
-                temp[j][j] -= value; 
-            }
-
-            gaussian_elimination_as_mut(temp); 
-
-            for (size_t j = 0; j < len; ++j) {
-                if (!is_nearly_zero(temp[j][j])) {
-                    auto pivot = temp[j][j]; 
-                    for (size_t k = j; k < len; ++k) {
-                        temp[j][k] /= pivot; 
-                    }
-                } else {
-                    std::vector<ResultDataType> t; 
-                    t.resize(len); 
-                    for (size_t k = 0; k < len; ++k) 
-                        t[k] = temp[k][j]; 
-                    ans.push_back({value, std::move(t)}); 
-                }
-            }
-        } 
-        return ans; 
-    } 
-
     template <typename Matrix> 
     auto gaussian_elimination_as_mut(Matrix &self) {
 
@@ -226,4 +176,78 @@ namespace matrix::algorithm {
 
         return self; 
     }
+
+    // template <typename Matrix> 
+    // auto eigenvalue(Matrix const &self) {
+
+    //     constexpr int attempt_cnt = 100; 
+
+    //     // using ResultType = std::vector<typename Matrix::ValueType>; 
+    //     using DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type; 
+    //     using ResultType = std::vector<DataType>; 
+        
+    //     typename Matrix::template MatrixOfType<DataType> temp = self; 
+    //     for (int i = 0; i < attempt_cnt; ++i) {
+    //         auto [q, r] = qr_factorization(temp);
+    //         temp = r * q;
+    //     }
+
+    //     ResultType result; 
+    //     result.reserve(temp.row()); 
+
+    //     for (int i = 0; i < temp.row(); ++i) {
+    //         // result[0][i] = temp[i][i];
+    //         result.push_back(temp[i][i]); 
+    //     }
+
+    //     sort(result.begin(), result.end());
+
+    //     return result;
+    // }
+
+    template <typename Matrix, typename ResultDataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type> 
+    auto eigenvector (Matrix const &self) {
+        auto len = self.row(); 
+        if (len != self.col()) {
+            throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
+        }
+
+        Matrix ans(len, len);
+
+        size_t cnt = 0; 
+        auto eigenvalues = eigenvalue(self); 
+
+        auto last = eigenvalues[0]; 
+        for (size_t i = 0; i < len; ++i) {
+            lassert (i < eigenvalues.size());
+            auto value = eigenvalues[i]; 
+
+            if (i != 0 && last == value) 
+                continue; 
+            
+            Matrix temp = self; 
+            for (size_t j = 0; j < len; ++j) {
+                temp[j][j] -= value; 
+            }
+
+            gaussian_elimination_as_mut(temp); 
+
+            for (size_t j = 0; j < len; ++j) {
+                if (!is_nearly_zero(temp[j][j])) {
+                    auto pivot = temp[j][j]; 
+                    for (size_t k = j; k < len; ++k) {
+                        temp[j][k] /= pivot; 
+                    }
+                } else {
+                    for (size_t k = 0; k < len; ++k){
+                        ans[k][cnt] = -temp[k][j];
+                    }
+                    ans[j][cnt] = 1;
+                    cnt++;
+                }
+            }
+        } 
+        return ans; 
+    } 
+
 }
