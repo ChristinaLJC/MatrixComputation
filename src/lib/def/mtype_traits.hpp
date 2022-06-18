@@ -1,5 +1,18 @@
 #pragma once 
 
+namespace matrix::algorithm {
+    template <typename NumberType> 
+    bool is_nearly_zero(NumberType const &v) {
+        if constexpr (std::numeric_limits<std::decay_t<NumberType>>::is_integer) {
+            return !v; 
+        } else {
+            // return v <= std::numeric_limits<std::decay_t<NumberType>>::epsilon() && 
+            //     v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
+            return v <= 1e-6 && v >= -1e-6; 
+        }
+    }
+}
+
 namespace matrix::type_traits {
     template <typename F, typename... Args, typename = decltype(std::declval<F>()(std::declval<Args&&>()...))> 
     std::true_type IsImpl(nullptr_t ); 
@@ -77,7 +90,7 @@ namespace matrix::type_traits {
     bool is_nearly_same(Lhs const &lhs, Rhs const &rhs) {
         if constexpr (!std::numeric_limits<Lhs>::is_integer && 
             std::numeric_limits<Rhs>::is_integer) {
-            return is_nearly_zero(lhs - rhs); 
+            return algorithm::is_nearly_zero(lhs - rhs); 
         } else {
             return lhs == rhs; 
         }
