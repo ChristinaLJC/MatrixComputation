@@ -125,8 +125,8 @@ namespace matrix {
 
             template <typename T, template <typename ...> typename Container>
             LinearOwnedMatrix(LinearOwnedMatrix<T, Container> const &self): Super(self.size()), m_row(self.row()) {
+                auto const c = self.col(); 
                 for (size_t i{}; i < self.size(); ++i) {
-                    auto c = self.col(); 
                     ((Super&)*this)[i] = self[i / c][i % c];
                 }
             }
