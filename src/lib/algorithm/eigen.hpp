@@ -123,7 +123,7 @@ namespace matrix::algorithm {
                     std::vector<ResultDataType> t; 
                     t.resize(len); 
                     for (size_t k = 0; k < len; ++k) 
-                        t[k] = temp[j][k]; 
+                        t[k] = temp[k][j]; 
                     ans.push_back({value, std::move(t)}); 
                 }
             }
