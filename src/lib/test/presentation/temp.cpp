@@ -23,6 +23,36 @@ Use matrix::algorithm;
 //     // bassert_eq(z[1][1], 0.9217);
 // }
 
+// TEST_METHOD {
+//     LinearOwnedMatrix<int> x(3,3); 
+//     Use std::literals; 
+//     x[0][0] = -1;
+//     x[0][1] = 2;
+//     x[0][2] = 2;
+//     x[1][0] = 2;
+//     x[1][1] = -1;
+//     x[1][2] = -2;
+//     x[2][0] = 2;
+//     x[2][1] = -2;
+//     x[2][2] = -1;
+//     auto y = eigenvalue(x);
+//     bassert_eq (y[0], -5);
+//     bassert_eq (y[1], 1);
+//     bassert_eq (y[2], 1);
+//     auto z = eigenvector(x);
+//     bassert_eq(z[0][0], -0.500000);
+//     bassert_eq(z[1][0], 1);
+//     bassert_eq(z[2][0], 1);
+
+//     bassert_eq(z[0][1], 1);
+//     bassert_eq(z[1][1], 1);
+//     bassert_eq(z[2][1], 0);
+
+//     bassert_eq(z[0][2], 1);
+//     bassert_eq(z[1][2], 0);
+//     bassert_eq(z[2][2], 1);
+// }
+
 TEST_METHOD {
     LinearOwnedMatrix<int> x(3,3); 
     Use std::literals; 
@@ -52,7 +82,6 @@ TEST_METHOD {
     bassert_eq(z[1][2], 0);
     bassert_eq(z[2][2], 1);
 }
-
 
 // TEST_METHOD {
 //     LinearOwnedMatrix<std::complex<int>> x(2,2); 

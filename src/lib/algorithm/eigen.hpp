@@ -127,10 +127,11 @@ namespace matrix::algorithm {
                 self[j][i] = {}; 
                 for (size_t k = i + 1; k < col; ++k) {
                     self[j][k] -= self[i][k] * divisor; 
+                    if (algorithm::is_nearly_zero(self[j][k])) {
+                        self[j][k] = 0; 
+                    }
                 }
-                if (type_traits::is_nearly_zero(self[j][k])) {
-                    self[j][k] = 0; 
-                }
+
             }
         }
 
@@ -187,7 +188,7 @@ namespace matrix::algorithm {
             throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
         }
 
-        Matrix ans(len, len);
+        typename Matrix::template MatrixOfType<ResultDataType> ans(len, len);
 
         size_t cnt = 0; 
         auto eigenvalues = eigenvalue(self); 
@@ -208,22 +209,22 @@ namespace matrix::algorithm {
                 temp[j][j] -= value; 
             }
 
-            for (size_t i = 0; i < temp.row(); ++i) {
-                for (size_t j = 0; j < temp.col(); ++j) {
-                    std::cout << temp[i][j] << " ";
-                }
-                std::cout << "\n";
-            }
+            // for (size_t i = 0; i < temp.row(); ++i) {
+            //     for (size_t j = 0; j < temp.col(); ++j) {
+            //         std::cout << temp[i][j] << " ";
+            //     }
+            //     std::cout << "\n";
+            // }
 
             gaussian_elimination_as_mut(temp); 
 
             // std::cout << "cur value: " << value << std::endl;
-            for (size_t i = 0; i < temp.row(); ++i) {
-                for (size_t j = 0; j < temp.col(); ++j) {
-                    std::cout << temp[i][j] << " ";
-                }
-                std::cout << "\n";
-            }
+            // for (size_t i = 0; i < temp.row(); ++i) {
+            //     for (size_t j = 0; j < temp.col(); ++j) {
+            //         std::cout << temp[i][j] << " ";
+            //     }
+            //     std::cout << "\n";
+            // }
 
             for (size_t j = 0; j < len; ++j) {
 
@@ -231,6 +232,7 @@ namespace matrix::algorithm {
                     auto pivot = temp[j][j]; 
                     for (size_t k = j; k < len; ++k) {
                         temp[j][k] /= pivot; 
+                        // std::cout << temp[j][k] << " | ";
                     }
                 } else {
                     for (size_t k = 0; k < len; ++k){
