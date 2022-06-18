@@ -128,6 +128,9 @@ namespace matrix::algorithm {
                 for (size_t k = i + 1; k < col; ++k) {
                     self[j][k] -= self[i][k] * divisor; 
                 }
+                if (type_traits::is_nearly_zero(self[j][k])) {
+                    self[j][k] = 0; 
+                }
             }
         }
 
