@@ -256,7 +256,7 @@ namespace matrix {
                 Use matrix::exception;
                 size_t row = m_row;
                 if (row != (size() / row)){
-                    throw MatrixStructureMismatchingException("LinearOwnedMatrix determinant with non-square matrix. ");
+                    throw MatrixNonSquareException("LinearOwnedMatrix determinant with non-square matrix. ");
                 }
                 return determinant_calculate(*(this), row);
             }
@@ -265,7 +265,7 @@ namespace matrix {
                 Use matrix::exception;
                 auto row = m_row;
                 if (row != (size() / row)){
-                    throw MatrixStructureMismatchingException("LinearOwnedMatrix trace with non-square matrix. ");
+                    throw MatrixNonSquareException("LinearOwnedMatrix trace with non-square matrix. ");
                 }
                 ValueType trace{};
                 for (size_t i = 0; i < row; i++){
