@@ -177,34 +177,6 @@ namespace matrix::algorithm {
         return self; 
     }
 
-    // template <typename Matrix> 
-    // auto eigenvalue(Matrix const &self) {
-
-    //     constexpr int attempt_cnt = 100; 
-
-    //     // using ResultType = std::vector<typename Matrix::ValueType>; 
-    //     using DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type; 
-    //     using ResultType = std::vector<DataType>; 
-        
-    //     typename Matrix::template MatrixOfType<DataType> temp = self; 
-    //     for (int i = 0; i < attempt_cnt; ++i) {
-    //         auto [q, r] = qr_factorization(temp);
-    //         temp = r * q;
-    //     }
-
-    //     ResultType result; 
-    //     result.reserve(temp.row()); 
-
-    //     for (int i = 0; i < temp.row(); ++i) {
-    //         // result[0][i] = temp[i][i];
-    //         result.push_back(temp[i][i]); 
-    //     }
-
-    //     sort(result.begin(), result.end());
-
-    //     return result;
-    // }
-
     template <typename Matrix, typename ResultDataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type> 
     auto eigenvector (Matrix const &self) {
         auto len = self.row(); 
