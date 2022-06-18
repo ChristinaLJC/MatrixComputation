@@ -259,6 +259,10 @@ namespace matrix {
                 return ans;
             }
 
+            This operator * (This const &rhs) const {
+                return cross_product(rhs); 
+            }
+
             LinearOwnedMatrix element_wise_product(LinearOwnedMatrix const &rhs) const {
                 Use matrix::exception;
                 auto row = m_row;
