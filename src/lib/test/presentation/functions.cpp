@@ -2,6 +2,28 @@
 
 Use matrix; 
 
+TEST_METHOD{
+    LinearOwnedMatrix<int> x(3,3);
+    x[0][0] = 1;
+    x[0][1] = 2;
+    x[0][2] = 3;
+    x[1][0] = 4;
+    x[1][1] = 5;
+    x[1][2] = 6;
+    x[2][0] = 7;
+    x[2][1] = 8;
+    x[2][2] = 9;
+    bassert_eq(x[0][0], 1);
+    bassert_eq(x[0][1], 2);
+    bassert_eq(x[0][2], 3);
+    bassert_eq(x[1][0], 4);
+    bassert_eq(x[1][1], 5);
+    bassert_eq(x[1][2], 6);
+    bassert_eq(x[2][0], 7);
+    bassert_eq(x[2][1], 8);
+    bassert_eq(x[2][2], 9);
+}
+
 TEST_METHOD {
     LinearOwnedMatrix<int> x(2,2); 
     x[0][0] = 1;
