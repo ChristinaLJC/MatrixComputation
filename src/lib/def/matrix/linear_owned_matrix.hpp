@@ -341,6 +341,35 @@ namespace matrix {
                 return ans;
             }
 
+            LinearOwnedMatrix reshape(size_t r, size_t c) const {
+                Use matrix::exception;
+                if (r * c != size()){
+                    throw MatrixStructureMismatchingException("LinearOwnedMatrix reshape with not matching size");
+                }
+                This ans(r, c);
+                for (size_t i = 0; i < row(); ++i){
+                    for (size_t j = 0; j < col(); ++j){
+                        size_t index = i*col()+j;
+                        ans[(index/c)][(index%c)] = (*this)[i][j];
+                    }
+                }
+                return ans;
+            }
+
+            LinearOwnedMatrix slice(size_t r0, size_t r1, size_t c0, size_t c1) const {
+                Use matrix::exception;
+                if (r1 < r0 || c1 < c0 || r0 > row() || r1 > row() || c0 > col() || c1 > col()){
+                    throw MatrixStructureInvalidSizeException("LinearOwnedMatrix slice with invalid size");
+                }
+                This ans(r1-r0+1, c1-c0+1);
+                for (size_t i = 0; i < r1-r0+1; ++i){
+                    for (size_t j = 0; j < c1-c0+1; ++j){
+                        ans[i][j] = (*this)[r0+i][c0+j];
+                    }
+                }
+                return ans;
+            }
+
             static LinearOwnedMatrix with_size(size_t k) {
                 // if (std::numeric_limits<size_t>::max() / k < k) {
                 //     abort();

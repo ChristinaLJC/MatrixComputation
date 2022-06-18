@@ -128,6 +128,28 @@ TEST_METHOD {
 }
 
 TEST_METHOD {
+    auto matrix = LinearOwnedMatrix<int>::with_identity_size(2); 
+    matrix[0][1] = -1; 
+    matrix[1][0] = 8; 
+    bassert_eq (matrix.max(), 8); 
+}
+
+TEST_METHOD {
+    auto matrix = LinearOwnedMatrix<int>::with_identity_size(2); 
+    matrix[0][1] = -1; 
+    matrix[1][0] = -2; 
+    bassert_eq (matrix.min(), -2); 
+}
+
+TEST_METHOD {
+    auto matrix = LinearOwnedMatrix<double>::with_identity_size(3); 
+    matrix[0][1] = -1.5; 
+    matrix[1][0] = -2.6; 
+    matrix[2][0] = 9.8;
+    bassert_eq (matrix.sum(), 8.7); 
+}
+
+TEST_METHOD {
     LinearOwnedMatrix<int> x(2,2); 
     x[0][0] = 1;
     x[0][1] = 2;
