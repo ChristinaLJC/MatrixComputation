@@ -77,3 +77,7 @@ TEST_METHOD {
     bassert_eq (matrix.size(), 64); 
     bassert_eq (matrix.sum(), 8); 
 }
+
+TEST_METHOD {
+    auto matrix = LinearOwnedMatrix<std::complex<int>>::with_identity_size(3); 
+}
