@@ -73,4 +73,14 @@ namespace matrix::type_traits {
         return f; 
     }
 
+    template <typename Lhs, typename Rhs> 
+    bool is_nearly_same(Lhs const &lhs, Rhs const &rhs) {
+        if constexpr (!std::numeric_limits<Lhs>::is_integer && 
+            std::numeric_limits<Rhs>::is_integer) {
+            return is_nearly_zero(lhs - rhs); 
+        } else {
+            return lhs == rhs; 
+        }
+    }
+
 }

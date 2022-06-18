@@ -105,7 +105,7 @@ namespace matrix::exception {
     do { \
         auto &&_l = (lhs); \
         auto &&_r = (rhs); \
-        if (_l != _r) { \
+        if (!type_traits::is_nearly_same(_l, _r)) { \
             std::string _tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_l)>>{}.from<std::string>(_l) \
                 + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_r)>>{}.from<std::string>(_r) + ". "; \
             throw matrix::exception::MatrixAssertError(std::move(_tmp)); \
@@ -127,7 +127,7 @@ namespace matrix::exception {
     do { \
         auto &&_l = (lhs); \
         auto &&_r = (rhs); \
-        if (_l == _r) { \
+        if (is_nearly_same(_l, _r)) { \
             std::string _tmp = __FILE__ ":" STRING(__LINE__) " assert unequal fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_l)>>{}.from<std::string>(_l) \
                 + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_r)>>{}.from<std::string>(_r) + ". "; \
             throw matrix::exception::MatrixAssertError(std::move(_tmp)); \
