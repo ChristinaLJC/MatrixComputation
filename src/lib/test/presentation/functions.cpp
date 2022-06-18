@@ -59,6 +59,73 @@ TEST_METHOD {
     bassert_eq(z[1][0], -40.23);
 }
 
+TEST_METHOD {
+    LinearOwnedMatrix<int> x(2,2); 
+    x[0][0] = 1;
+    x[0][1] = 2;
+    x[1][0] = -1;
+    x[1][1] = -3;
+    auto y = x.dot_product(x);
+    bassert_eq(y[0][0], 2);
+    bassert_eq(y[0][1], 13);
+}
+
+TEST_METHOD {
+    LinearOwnedMatrix<int> x(1,3); 
+    x[0][0] = 1;
+    x[0][1] = 2;
+    x[0][2] = -4;
+    auto y = x.dot_product(x);
+    bassert_eq(y[0][0], 1);
+    bassert_eq(y[0][1], 4);
+    bassert_eq(y[0][2], 16);
+}
+
+
+TEST_METHOD{
+    LinearOwnedMatrix<int> x(3,3);
+    x[0][0] = 1;
+    x[0][1] = 2;
+    x[0][2] = 3;
+    x[1][0] = 4;
+    x[1][1] = 5;
+    x[1][2] = 6;
+    x[2][0] = 7;
+    x[2][1] = 8;
+    x[2][2] = 9;
+    auto y = x.cross_product(x);
+    bassert_eq(y[0][0], 30);
+    bassert_eq(y[0][1], 36);
+    bassert_eq(y[0][2], 42);
+    bassert_eq(y[1][0], 66);
+    bassert_eq(y[1][1], 81);
+    bassert_eq(y[1][2], 96);
+    bassert_eq(y[2][0], 102);
+    bassert_eq(y[2][1], 126);
+    bassert_eq(y[2][2], 150);
+}
+
+TEST_METHOD {
+    LinearOwnedMatrix<int> x(1,3); 
+    x[0][0] = 1;
+    x[0][1] = 2;
+    x[0][2] = -4;
+    LinearOwnedMatrix<int> y(3,1); 
+    y[0][0] = 1;
+    y[1][0] = 2;
+    y[2][0] = -4;
+    auto z = y.cross_product(x);
+    bassert_eq(z[0][0], 1);
+    bassert_eq(z[0][1], 2);
+    bassert_eq(z[0][2], -4);
+    bassert_eq(z[1][0], 2);
+    bassert_eq(z[1][1], 4);
+    bassert_eq(z[1][2], -8);
+    bassert_eq(z[2][0], -4);
+    bassert_eq(z[2][1], -8);
+    bassert_eq(z[2][2], 16);
+
+}
 
 TEST_METHOD {
     LinearOwnedMatrix<int> x(2,2); 
@@ -93,28 +160,6 @@ TEST_METHOD {
 }
 
 
-TEST_METHOD{
-    LinearOwnedMatrix<int> x(3,3);
-    x[0][0] = 1;
-    x[0][1] = 2;
-    x[0][2] = 3;
-    x[1][0] = 4;
-    x[1][1] = 5;
-    x[1][2] = 6;
-    x[2][0] = 7;
-    x[2][1] = 8;
-    x[2][2] = 9;
-    auto y = x.cross_product(x);
-    bassert_eq(y[0][0], 30);
-    bassert_eq(y[0][1], 36);
-    bassert_eq(y[0][2], 42);
-    bassert_eq(y[1][0], 66);
-    bassert_eq(y[1][1], 81);
-    bassert_eq(y[1][2], 96);
-    bassert_eq(y[2][0], 102);
-    bassert_eq(y[2][1], 126);
-    bassert_eq(y[2][2], 150);
-}
 
 TEST_METHOD{
     LinearOwnedMatrix<int> x(3,3);
@@ -144,40 +189,7 @@ TEST_METHOD{
     bassert_eq(y[2][3], 144);
 }
 
-TEST_METHOD {
-    LinearOwnedMatrix<int> x(2,2); 
-    x[0][0] = 1;
-    x[0][1] = 2;
-    x[1][0] = -1;
-    x[1][1] = -3;
-    auto y = x.element_wise_product(x);
-    bassert_eq(y[0][0], 1);
-    bassert_eq(y[0][1], 4);
-    bassert_eq(y[1][0], 1);
-    bassert_eq(y[1][1], 9);
-}
 
-TEST_METHOD {
-    LinearOwnedMatrix<int> x(2,2); 
-    x[0][0] = 1;
-    x[0][1] = 2;
-    x[1][0] = -1;
-    x[1][1] = -3;
-    auto y = x.dot_product(x);
-    bassert_eq(y[0][0], 2);
-    bassert_eq(y[0][1], 13);
-}
-
-TEST_METHOD {
-    LinearOwnedMatrix<int> x(1,3); 
-    x[0][0] = 1;
-    x[0][1] = 2;
-    x[0][2] = -4;
-    auto y = x.dot_product(x);
-    bassert_eq(y[0][0], 1);
-    bassert_eq(y[0][1], 4);
-    bassert_eq(y[0][2], 16);
-}
 
 
 
