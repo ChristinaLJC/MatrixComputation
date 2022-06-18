@@ -166,10 +166,7 @@ namespace matrix::algorithm {
             result.push_back(temp[i][i]); 
         }
 
-        // sort(result.begin(), result.end());
-
-        
-        gaussian_elimination_as_mut(temp); 
+        sort(result.begin(), result.end());
 
         return result;
     }
