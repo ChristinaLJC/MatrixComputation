@@ -113,10 +113,21 @@ namespace matrix::algorithm {
 }
 
 namespace matrix::type_traits {
+
+    template <typename T> 
+    struct IsComplex {
+        bool constexpr static value = false; 
+    }; 
+
+    template <typename T> 
+    struct IsComplex<std::complex<T>> {
+        bool constexpr static value = true; 
+        using type = T; 
+    }; 
+
     template <typename Lhs, typename Rhs> 
     bool is_nearly_same(Lhs const &lhs, Rhs const &rhs) {
-        if constexpr (!std::numeric_limits<Lhs>::is_integer || 
-            !std::numeric_limits<Rhs>::is_integer) {
+        if constexpr (IsComplex<Lhs>::value || IsComplex<Rhs>::value) {
             return algorithm::is_nearly_zero(lhs - (Lhs)rhs); 
         } else {
             return lhs == rhs; 

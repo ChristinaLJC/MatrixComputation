@@ -354,7 +354,20 @@ namespace matrix {
             }
 
             This operator~ () const {
-                return (this->apply(std::conj), row()); 
+                return This(this->apply(std::conj), row()); 
+            }
+
+            bool operator== (This const &rhs) const {
+                if (auto size_match = row() == rhs.row() && 
+                    col() == rhs.col(); !size_match) {
+                        return false; 
+                    }
+                
+                for (size_t i = 0; i < size(); ++i) {
+                    if (((Super&)*this)[i] != ((Super&)rhs)[i]) 
+                        return false; 
+                }
+                return true; 
             }
     };
     
