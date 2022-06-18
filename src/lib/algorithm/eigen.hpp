@@ -146,14 +146,8 @@ namespace matrix::algorithm {
 
     template <typename Matrix> 
     auto gaussian_elimination_as_mut(Matrix &self) {
-        // using DataType = typename type_traits::TypeUpgrade<typename OriginMatrix::ValueType>::type; 
-        // using ResultType = typename OriginMatrix::template MatrixOfType<DataType>; 
-        // ResultType self = self_; 
-        size_t row = self.row(); 
 
-        // std::vector<size_t> permutation (row); 
-        // for (size_t i = 0; i < row; ++i) 
-        //     permutation[i] = i; 
+        size_t row = self.row(); 
         
         for (size_t i = 0; i < row; ++i) {
             auto col = self.col(); 
