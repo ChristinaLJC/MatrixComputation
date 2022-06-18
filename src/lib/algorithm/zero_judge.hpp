@@ -6,8 +6,9 @@ namespace matrix::algorithm {
         if constexpr (std::numeric_limits<std::decay_t<NumberType>>::is_integer) {
             return !v; 
         } else {
-            return v <= std::numeric_limits<std::decay_t<NumberType>>::epsilon() && 
-                v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
+            // return v <= std::numeric_limits<std::decay_t<NumberType>>::epsilon() && 
+            //     v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
+            return v <= 1e-6 && v >= -1e-6; 
         }
     }
 
