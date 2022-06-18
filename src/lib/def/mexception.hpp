@@ -137,6 +137,6 @@ namespace matrix::exception {
 #define bassert_ne BASSERT_NE
 
 #define TODO(statement) \
-    throw matrix::exception::MatrixNotRealizeException( __FILE__ ":" STRING(__LINE__) " TODO Exception: " #statement );
+    throw matrix::exception::MatrixNotRealizeException( __FILE__ ":" STRING(__LINE__) " TODO Exception: " #statement )
 
 #define todo TODO

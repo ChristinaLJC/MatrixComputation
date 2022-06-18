@@ -120,14 +120,11 @@ namespace matrix::algorithm {
                         temp[j][k] /= pivot; 
                     }
                 } else {
-                    // for (size_t k = 0; k < len; ++k) {
-                    // }
                     std::vector<ResultDataType> t; 
                     t.resize(len); 
                     for (size_t k = 0; k < len; ++k) 
                         t[k] = temp[j][k]; 
                     ans.push_back({value, std::move(t)}); 
-                    // todo("")
                 }
             }
         } 
