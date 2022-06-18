@@ -346,14 +346,17 @@ namespace matrix {
                 if (r * c != size()){
                     throw MatrixStructureMismatchingException("LinearOwnedMatrix reshape with not matching size");
                 }
-                This ans(r, c);
-                for (size_t i = 0; i < row(); ++i){
-                    for (size_t j = 0; j < col(); ++j){
-                        size_t index = i*col()+j;
-                        ans[(index/c)][(index%c)] = (*this)[i][j];
-                    }
-                }
-                return ans;
+                // This ans(r, c);
+                // for (size_t i = 0; i < row(); ++i){
+                //     for (size_t j = 0; j < col(); ++j){
+                //         size_t index = i*col()+j;
+                //         ans[(index/c)][(index%c)] = (*this)[i][j];
+                //     }
+                // }
+                // return ans;
+                
+                Super base = *this; 
+                return (std::move(base), r);  
             }
 
             LinearOwnedMatrix slice(size_t r0, size_t r1, size_t c0, size_t c1) const {
