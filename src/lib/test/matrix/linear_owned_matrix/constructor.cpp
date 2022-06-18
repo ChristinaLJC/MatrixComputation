@@ -79,7 +79,7 @@ TEST_METHOD {
 }
 
 TEST_METHOD {
-    auto matrix = LinearOwnedMatrix<std::complex<int>>::with_identity_size(3); 
+    auto matrix = LinearOwnedMatrix<std::complex<float>>::with_identity_size(3); 
     bassert_eq (matrix[0][0], 1); 
     using namespace std::literals; 
     matrix[0][0] = 1i; 
