@@ -32,6 +32,7 @@ TEST_METHOD {
     y[2][1] = 6.3;
     auto z = x * y;
     bassert_eq(z.size(), 4);
+    static_assert (std::is_same_v<std::decay_t<decltype(z[0][0])>, double>); 
     bassert_eq(z[0][0], 7.52);
     bassert_eq(z[0][1], 32.51);
     bassert_eq(z[1][0], -40.23);

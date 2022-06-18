@@ -94,7 +94,6 @@ namespace matrix::type_traits {
 namespace matrix::algorithm {
     template <typename NumberType> 
     bool is_nearly_zero(NumberType const &v) {
-        std::cout << "Zero!\n"; 
         constexpr auto abs_transform = [](auto const &v) -> std::enable_if_t<std::is_same_v<void, std::void_t<decltype(abs(v))>>, typename std::decay_t<decltype(v)>::value_type> {
             // return std::abs(v); 
             return abs(v); 
@@ -109,7 +108,6 @@ namespace matrix::algorithm {
             //     v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
         } else {
             constexpr auto epilson = 2e-6; 
-            std::cout << "!!!\n"; 
             // std::cout << stringizing(v) << "!\n"; 
             return v <= epilson && v >= -epilson; 
         }
@@ -133,6 +131,10 @@ namespace matrix::type_traits {
     bool is_nearly_same(Lhs const &lhs, Rhs const &rhs) {
         if constexpr (IsComplex<Lhs>::value || IsComplex<Rhs>::value) {
             return algorithm::is_nearly_zero(lhs - (Lhs)rhs); 
+        } else if constexpr ((!std::numeric_limits<Lhs>::is_integer || !std::numeric_limits<Rhs>::is_integer) && requires {
+            lhs - rhs; 
+        }) {
+            return algorithm::is_nearly_zero(lhs - rhs); 
         } else {
             return lhs == rhs; 
         }
