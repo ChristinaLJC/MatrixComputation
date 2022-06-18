@@ -39,6 +39,27 @@ TEST_METHOD {
     bassert_eq(z[1][1], 38.04);
 }
 
+
+TEST_METHOD {
+    LinearOwnedMatrix<double> x(2,3); 
+    x[0][0] = 1.3;
+    x[0][1] = 4.4;
+    x[0][2] = 5.3;
+    x[1][0] = -1.5;
+    x[1][1] = -3.3;
+    x[1][2] = 6.3;
+    LinearOwnedMatrix<double> vector(3,1); 
+    vector[0][0] = 1.3;
+    vector[1][0] = 5.3;
+    vector[2][0] = -3.3;
+    auto z = x * vector;
+    bassert_eq(z.size(), 2);
+    bassert_eq(z.row(), 2);
+    bassert_eq(z[0][0], 7.52);
+    bassert_eq(z[1][0], -40.23);
+}
+
+
 TEST_METHOD {
     LinearOwnedMatrix<int> x(2,2); 
     x[0][0] = 1;

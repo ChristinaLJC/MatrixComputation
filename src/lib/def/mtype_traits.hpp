@@ -127,13 +127,20 @@ namespace matrix::type_traits {
         using type = T; 
     }; 
 
+    template <typename Lhs, typename Rhs, typename = void> 
+    struct CanDoMinus : public std::false_type {
+    }; 
+
+    template <typename Lhs, typename Rhs> 
+    struct CanDoMinus <Lhs, Rhs, std::void_t<decltype(std::declval<Lhs>() - std::declval<Rhs>())>> 
+        : public std::true_type {
+    }; 
+
     template <typename Lhs, typename Rhs> 
     bool is_nearly_same(Lhs const &lhs, Rhs const &rhs) {
         if constexpr (IsComplex<Lhs>::value || IsComplex<Rhs>::value) {
             return algorithm::is_nearly_zero(lhs - (Lhs)rhs); 
-        } else if constexpr ((!std::numeric_limits<Lhs>::is_integer || !std::numeric_limits<Rhs>::is_integer) && requires {
-            lhs - rhs; 
-        }) {
+        } else if constexpr ((!std::numeric_limits<Lhs>::is_integer || !std::numeric_limits<Rhs>::is_integer) && CanDoMinus<Lhs, Rhs>::value) {
             return algorithm::is_nearly_zero(lhs - rhs); 
         } else {
             return lhs == rhs; 
