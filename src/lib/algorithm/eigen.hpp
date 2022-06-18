@@ -223,6 +223,7 @@ namespace matrix::algorithm {
             }
 
             for (size_t j = 0; j < len; ++j) {
+
                 if (!is_nearly_zero(temp[j][j])) {
                     auto pivot = temp[j][j]; 
                     for (size_t k = j; k < len; ++k) {
@@ -235,6 +236,7 @@ namespace matrix::algorithm {
                     ans[j][cnt] = 1;
                     cnt++;
                 }
+
             }
             last = value;
         } 

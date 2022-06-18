@@ -24,7 +24,7 @@ Use matrix::algorithm;
 // }
 
 TEST_METHOD {
-    LinearOwnedMatrix<int> x(3,3); 
+    LinearOwnedMatrix<double> x(3,3); 
     Use std::literals; 
     x[0][0] = -1;
     x[0][1] = 2;
