@@ -53,5 +53,13 @@ namespace matrix {
             ConstVisitor operator[] (size_t v) const {
                 return ConstVisitor(*this, v); 
             }
+
+            ValueType sum() const {
+                ValueType result = 0;
+                for (auto &&v: *this) {
+                    result += v.second; 
+                }
+                return result;
+            }
     }; 
 }
