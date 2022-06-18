@@ -352,6 +352,10 @@ namespace matrix {
                 }
                 return ans;
             }
+
+            This operator~ () const {
+                return (this->apply(std::conj), col()); 
+            }
     };
     
 }
