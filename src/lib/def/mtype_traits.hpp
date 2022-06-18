@@ -3,12 +3,17 @@
 namespace matrix::algorithm {
     template <typename NumberType> 
     bool is_nearly_zero(NumberType const &v) {
+        constexpr auto abs_transform = [](auto const &v) -> decltype(v.abs()) {
+            return v.abs(); 
+        }; 
         if constexpr (std::numeric_limits<std::decay_t<NumberType>>::is_integer) {
             return !v; 
-        } else {
+        } else if (type_traits::is_impl(abs_transform)(v)) {
+            return is_nearly_same(abs_transform(v)); 
             // return v <= std::numeric_limits<std::decay_t<NumberType>>::epsilon() && 
             //     v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
-            return v <= 1e-6 && v >= -1e-6; 
+        } else {
+            return v >= 1e-6 && v <= -1e-6; 
         }
     }
 }
