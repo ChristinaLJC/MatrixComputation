@@ -4,8 +4,6 @@
 
 #include "def/matrix/linear_owned_matrix.hpp"
 
-#include "zero_judge.hpp"
-
 namespace matrix::algorithm {
     template <typename Matrix, typename DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type>  
     std::pair<typename Matrix::template MatrixOfType<DataType>, typename Matrix::template MatrixOfType<DataType>> qr_factorization(Matrix const &self) {
@@ -89,8 +87,12 @@ namespace matrix::algorithm {
         if (len != self.col()) {
             throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
         }
-        using ReturnType = std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>>; 
-        ReturnType ans; 
+
+        using ResultType = std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>>; 
+
+        using SuggestedMatrix = typename Matrix::template MatrixOfType<ResultDataType>; 
+
+        ResultType ans; 
         ans.reserve(len); 
 
         size_t cnt = 0; 
