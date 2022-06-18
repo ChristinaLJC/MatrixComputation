@@ -22,7 +22,7 @@ TEST_METHOD {
     vector[1][0] = 45;
     vector[2][0] = 6.3;
     auto result = vector / 3;
-    bassert_eq (result[1][0], 9);
+    bassert_eq (result[1][0], 15);
     bassert_eq (result[2][0], 2.1);
 }
 

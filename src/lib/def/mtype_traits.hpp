@@ -94,6 +94,7 @@ namespace matrix::type_traits {
 namespace matrix::algorithm {
     template <typename NumberType> 
     bool is_nearly_zero(NumberType const &v) {
+        std::cout << "Zero!\n"; 
         constexpr auto abs_transform = [](auto const &v) -> std::enable_if_t<std::is_same_v<void, std::void_t<decltype(abs(v))>>, typename std::decay_t<decltype(v)>::value_type> {
             // return std::abs(v); 
             return abs(v); 
@@ -107,7 +108,10 @@ namespace matrix::algorithm {
             // return v <= std::numeric_limits<std::decay_t<NumberType>>::epsilon() && 
             //     v >= - std::numeric_limits<std::decay_t<NumberType>>::epsilon(); 
         } else {
-            return v <= 1e-6 && v >= -1e-6; 
+            constexpr auto epilson = 2e-6; 
+            std::cout << "!!!\n"; 
+            // std::cout << stringizing(v) << "!\n"; 
+            return v <= epilson && v >= -epilson; 
         }
     }
 }
