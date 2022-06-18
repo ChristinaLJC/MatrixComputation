@@ -2,13 +2,36 @@
 
 member: 李佳纯 黄昊南 邓植仁
 
+-------
+
 ## Designing
+
+We design that the data structure is completely divided with the algorithm invocation. The data part is mainly described as OwnedMatrix. Actually, if it's allowed, the better realization would be the automatic matrix types. But the ownership controlling system must base on the OwnedMatrix series. 
+
+The second core part is the algorithm part. In this part, we just need to describe the algorithm itself but do not care about the concrete algorithm type. Then we can use the template type information to describe it then realize the generic algorithm like get inverse or get the sum. 
+
+To make full usage of the matrix access, we define the new type as proxy to temporary cache the index, and after that we can easily visit our element value by this. 
+
+--------
 
 ## Highlights
 
+- Test Framework 
+  We build a private test framework system which can efficiently test our lib codes in a synchronously and asynchronously way. 
+- The advanced integral type 
+  We make a more wide integral type `int128_t` to use. Some more convenience techniques including the literals are used. 
+
+---------------
+
 ## Difficulties
 
+- Eigenvalue is hard to compute
+- Hard to cope with complex in Eigenvalue computation
+- OpenCV
+- It needs hard thoughts to comparing different basic data types. 
+- Complex is quite difficult to deal with, because it seems a normal data type but completely different from other normal data types. 
 
+--------------
 
 ## Core Codes & Tests
 
@@ -307,7 +330,177 @@ LinearOwnedMatrix transposition() const {
 
 ### Eigenvalues and Eigenvectors
 
+```cpp
+template <typename Matrix> 
+    auto eigenvalue(Matrix const &self) {
+
+        constexpr int attempt_cnt = 100; 
+
+        using DataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type; 
+        using ResultType = std::vector<DataType>; 
+        
+        typename Matrix::template MatrixOfType<DataType> temp = self; 
+        for (int i = 0; i < attempt_cnt; ++i) {
+            auto [q, r] = qr_factorization(temp);
+            temp = r * q;
+        }
+
+        ResultType result; 
+        result.reserve(temp.row()); 
+
+        for (int i = 0; i < temp.row(); ++i) {
+            result.push_back(temp[i][i]); 
+        }
+
+        sort(result.begin(), result.end(), helper::ComplexComp{});
+
+        return result;
+    }
+
+    template <typename Matrix> 
+    auto gaussian_elimination_as_mut(Matrix &self) {
+        size_t row = self.row(); 
+        for (size_t i = 0; i < row; ++i) {
+            auto col = self.col(); 
+            if (i >= col) 
+                break; 
+            
+            auto pivot = self[i][i]; 
+
+            if (is_nearly_zero(pivot)) {
+                size_t j; 
+                for (j = i + 1; j < row; ++j) {
+                    if (!is_nearly_zero(self[j][i])) {
+                        for (size_t k {}; k < col; ++k) {
+                            std::swap(self[i][k], self[j][k]); 
+                        }
+                        break; 
+                    } 
+                }
+                if (j == row) {
+                    return i; 
+                }
+            }
+
+            for (size_t j = i + 1; j < row; ++j) {
+                auto divisor = self[j][i] / pivot; 
+                self[j][i] = {}; 
+                for (size_t k = i + 1; k < col; ++k) {
+                    self[j][k] -= self[i][k] * divisor; 
+                    if (algorithm::is_nearly_zero(self[j][k])) {
+                        self[j][k] = 0; 
+                    }
+                }
+
+            }
+        }
+
+        return row; 
+    }
+
+    template <typename Matrix, typename ResultDataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type> 
+    auto eigenvector (Matrix const &self) {
+        auto len = self.row(); 
+        if (len != self.col()) {
+            throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
+        }
+
+        typename Matrix::template MatrixOfType<ResultDataType> ans(len, len);
+
+        size_t cnt = 0; 
+        auto eigenvalues = eigenvalue(self); 
+
+        auto last = eigenvalues[0]; 
+        for (size_t i = 0; i < len; ++i) {
+            lassert (i < eigenvalues.size());
+            auto value = eigenvalues[i]; 
+
+            if (i != 0 && type_traits::is_nearly_same(last, value)) {
+                continue; 
+            }
+                
+            typename Matrix::template MatrixOfType<ResultDataType> temp = self; 
+            for (size_t j = 0; j < len; ++j) {
+                temp[j][j] -= value; 
+            }
+
+            gaussian_elimination_as_mut(temp); 
+
+            for (size_t j = 0; j < len; ++j) {
+
+                if (!is_nearly_zero(temp[j][j])) {
+                    auto pivot = temp[j][j]; 
+                    for (size_t k = j; k < len; ++k) {
+                        temp[j][k] /= pivot; 
+                    }
+                } else {
+                    for (size_t k = 0; k < len; ++k){
+                        ans[k][cnt] = -temp[k][j];
+                    }
+                    ans[j][cnt] = 1;
+                    cnt++;
+                }
+
+            }
+            last = value;
+        } 
+        return ans; 
+    } 
+
+    template <typename Matrix, typename ResultDataType = typename type_traits::template TypeUpgrade<typename Matrix::ValueType>::type> 
+    auto eigenvector_depreacated (Matrix const &self) {
+        auto len = self.row(); 
+        if (len != self.col()) {
+            throw matrix::exception::MatrixNonSquareException( __FILE__ ":" STRING(__LINE__) " " STRING(__FUNCTION__) ": the matrix is not a square matrix. "); 
+        }
+
+        using ResultType = std::vector<std::pair<ResultDataType, std::vector<ResultDataType>>>; 
+
+        using SuggestedMatrix = typename Matrix::template MatrixOfType<ResultDataType>; 
+
+        ResultType ans; 
+        ans.reserve(len); 
+
+        size_t cnt = 0; 
+        auto eigenvalues = eigenvalue(self); 
+
+        auto last = eigenvalues[0]; 
+        for (size_t i = 0; i < len; ++i) {
+            lassert (i < eigenvalues.size());
+            auto value = eigenvalues[i]; 
+
+            if (i != 0 && last == value) 
+                continue; 
+            
+            Matrix temp = self; 
+            for (size_t j = 0; j < len; ++j) {
+                temp[j][j] -= value; 
+            }
+
+            gaussian_elimination_as_mut(temp); 
+
+            for (size_t j = 0; j < len; ++j) {
+                if (!is_nearly_zero(temp[j][j])) {
+                    auto pivot = temp[j][j]; 
+                    for (size_t k = j; k < len; ++k) {
+                        temp[j][k] /= pivot; 
+                    }
+                } else {
+                    std::vector<ResultDataType> t; 
+                    t.resize(len); 
+                    for (size_t k = 0; k < len; ++k) 
+                        t[k] = temp[k][j]; 
+                    ans.push_back({value, std::move(t)}); 
+                }
+            }
+        } 
+        return ans; 
+    } 
+```
+
 <img src="D:\SUSTech\2022Spring\CPP\Project\res\eigen.png" style="zoom:50%;" />
+
+<img src="D:\SUSTech\2022Spring\CPP\Project\res\eigen2.png" style="zoom:50%;" />
 
 ### Traces
 
