@@ -53,9 +53,9 @@ TEST_METHOD {
     bassert_eq(z[2][2], 1);
 }
 TEST_METHOD{
-    LinearOwnedMatrix<int> x(5000,5000);
-    for (int i = 0; i < 5000; ++i){
-        for (int j = 0; j < 5000; ++j){
+    LinearOwnedMatrix<int> x(10000,10000);
+    for (int i = 0; i < 10000; ++i){
+        for (int j = 0; j < 10000; ++j){
             x[i][j] = i+j;
         }
     }
