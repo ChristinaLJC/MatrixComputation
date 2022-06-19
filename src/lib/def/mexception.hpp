@@ -45,15 +45,28 @@ namespace matrix::exception {
      * 
      * Which means we want a correct number addition but fails! 
      */ 
-    struct MatrixOverflowException : public MatrixArithmeticException {
+    struct MatrixOverflowException final : public MatrixArithmeticException {
         using MatrixArithmeticException::MatrixArithmeticException; 
         // ~MatrixOverflowException() override = default; 
     }; 
 
-    struct MatrixZeroDividedException: public MatrixArithmeticException {
+    struct MatrixZeroDividedException final : public MatrixArithmeticException {
         using MatrixArithmeticException::MatrixArithmeticException; 
         // ~MatrixZeroDividedException() override = default; 
     }; 
+
+    struct MatrixBadCastException final : public MatrixArithmeticException {
+        using MatrixArithmeticException::MatrixArithmeticException; 
+    }; 
+
+    struct MatrixNegateException final : public MatrixArithmeticException {
+        using MatrixArithmeticException::MatrixArithmeticException; 
+    }; 
+
+    struct MatrixNotRealizeException final : public MatrixBaseException {
+        using MatrixBaseException::MatrixBaseException; 
+    }; 
+
 }
 
 #include "def/mtype_traits.hpp"
@@ -92,7 +105,7 @@ namespace matrix::exception {
     do { \
         auto &&_l = (lhs); \
         auto &&_r = (rhs); \
-        if (_l != _r) { \
+        if (!type_traits::is_nearly_same(_l, _r)) { \
             std::string _tmp = __FILE__ ":" STRING(__LINE__) " assert equation fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_l)>>{}.from<std::string>(_l) \
                 + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_r)>>{}.from<std::string>(_r) + ". "; \
             throw matrix::exception::MatrixAssertError(std::move(_tmp)); \
@@ -114,7 +127,7 @@ namespace matrix::exception {
     do { \
         auto &&_l = (lhs); \
         auto &&_r = (rhs); \
-        if (_l == _r) { \
+        if (type_traits::is_nearly_same(_l, _r)) { \
             std::string _tmp = __FILE__ ":" STRING(__LINE__) " assert unequal fails! lhs{" #lhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_l)>>{}.from<std::string>(_l) \
                 + " but rhs{" #rhs "} is " + matrix::type_traits::From<std::decay_t<decltype(_r)>>{}.from<std::string>(_r) + ". "; \
             throw matrix::exception::MatrixAssertError(std::move(_tmp)); \
@@ -122,3 +135,8 @@ namespace matrix::exception {
     } while (0); 
 
 #define bassert_ne BASSERT_NE
+
+#define TODO(statement) \
+    throw matrix::exception::MatrixNotRealizeException( __FILE__ ":" STRING(__LINE__) " TODO Exception: " #statement )
+
+#define todo TODO

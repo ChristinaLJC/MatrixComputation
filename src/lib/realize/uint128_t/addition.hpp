@@ -8,9 +8,16 @@ namespace matrix::inline prelude {
         template <typename F, bool secure, size_t index = 0> 
         constexpr void add(u128 &result, u128 const &lhs, u128 const &rhs, u64 cached = 0) noexcept (!secure && !logical_error_detected) {
             lassert (cached <= std::numeric_limits<u32>::max()); 
+            if constexpr (secure) {
+                // std::clog << "cached={}, lhs{} + rhs{} = what~?\n"_format(cached, 
+                //     F{}.template operator()<index>(lhs), F{}.template operator()<index>(rhs)); 
+            }
             cached += F{}.template operator()<index>(lhs); 
             cached += F{}.template operator()<index>(rhs); 
             F{}.template operator()<index>(result) = static_cast<u32>(cached); 
+            if constexpr (secure) {
+                // std::clog << "Then the result = {}\n"_format(F{}.template operator()<index>(result)); 
+            }
             cached >>= 32; 
             if constexpr (index < 3) {
                 add<F, secure, index + 1> (result, lhs, rhs, cached); 
@@ -33,8 +40,9 @@ namespace matrix::inline prelude {
 
     template <bool secure> 
     constexpr u128 &u128::operator+= (u128 const &rhs) noexcept (!secure && !logical_error_detected) {
-        u128 result = *this + rhs; 
-        return *this = result;  
+        // u128 result = *this + rhs; 
+        // std::clog << std::string(result) << '\n'; 
+        return *this = *this + rhs; 
     }
 
     namespace helper {

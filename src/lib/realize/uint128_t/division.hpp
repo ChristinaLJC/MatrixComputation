@@ -25,20 +25,39 @@ namespace matrix::inline prelude {
 
         template <typename F, size_t high_val> 
         constexpr u32 divide_with_same_level(u128 &lhs, u128 const &rhs) noexcept(!logical_error_detected) {
+            // std::clog << __FUNCTION__ << " call, high-val = " << high_val << '\n'; 
             lassert (F{}.template operator()<high_val>(rhs)); 
             u32 attempt_val = ({
                 u64 cached  = F{}.template operator()<high_val>(lhs); 
                 if constexpr (high_val < 3) 
                     cached |= (u64)(F{}.template operator()<high_val + 1>(lhs)) << 32; 
-                cached /= F{}.template operator()<high_val>(rhs); 
+                // if (F{}.template operator()<high_val>(rhs) != 0xFFFFFFFF) 
+                // lassert (F{}.template operator()<high_val>(rhs) != 0xFFFFFFFF) 
+                
+                // It's a bad solution for it. 
+                // cached /= (u64)F{}.template operator()<high_val>(rhs) + 1; 
+
+                cached /= (u64)F{}.template operator()<high_val>(rhs); 
                 lassert (cached <= 0xFFFFFFFF); 
+
                 cached; 
             }); 
+            // std::clog << "The attempt val now is: " << attempt_val << '\n'; 
             // std::clog << "lhs = {}, rhs = {}, so the directly attempt value init = {}\n"_format(lhs, rhs, attempt_val); 
+            // std::clog << "high-val: " << high_val << '\n'; 
+            
+            // Obviously, it means it's even not enough for you to deal with it! 
             if (!attempt_val)
                 return 0; 
             --attempt_val; 
+
             u128 attempt_subtract = rhs.template operator*<logical_error_detected>(attempt_val); 
+            lassert (lhs >= rhs); 
+            while (lhs < attempt_subtract) {
+                --attempt_val; 
+                attempt_subtract -= rhs; 
+            }
+            // lassert (lhs >= attempt_subtract); 
             lhs -= attempt_subtract;
             // std::clog << "then, lhs = {}, rhs = {}, so the directly attempt value init = {}, attempt_subtract: {}\n"_format(lhs, rhs, attempt_val, 
                 // attempt_subtract); 
@@ -46,6 +65,7 @@ namespace matrix::inline prelude {
             while (lhs >= rhs) {
                 // std::clog << "lhs = {}, rhs = {}, attempt_val = {}. \n"_format(lhs, rhs, attempt_val); 
                 ++attempt_val; 
+                // std::clog << "attempt-val: " << attempt_val << '\n'; 
                 lhs -= rhs; 
             }
             return attempt_val; 
@@ -58,7 +78,8 @@ namespace matrix::inline prelude {
             } else if constexpr (i) {
                 return divide_with_same_level_recursively<F, i-1>(lhs, rhs); 
             } else {
-                throw exception::MatrixZeroDividedException("Value divided by zero. "); 
+                // throw exception::MatrixZeroDividedException("Value divided by zero. "); 
+                abort(); 
             }
         }
 
@@ -76,6 +97,7 @@ namespace matrix::inline prelude {
             }
             // auto lhs_str = "{}"_format(lhs); 
             // auto rhs_str = "{}"_format(rhs); 
+            // std::clog << "left_shift_possible: " << left_shift_possible << "\n"; 
             auto &&result = divide_with_same_level_recursively<F, 3>(lhs, rhs); 
             // std::clog << "divide from {} / {}, the result: {}\n"_format(lhs_str, rhs_str, result); 
             F{}.template operator()<3 - left_shift_possible>(ans) = result; 
@@ -86,14 +108,14 @@ namespace matrix::inline prelude {
         u128 result; 
         u128 cached = *this; 
         if (!rhs) {
-            throw false; 
+            throw exception::MatrixZeroDividedException ("uint128_t divided by zero. "); 
         }
         helper::divide<GetByIndex>(result, cached, rhs); 
         return result; 
     }
 
     constexpr u128 &u128::operator/= (u128 const &rhs) {
-        u128 ans = *this / rhs; 
-        return *this = ans; 
+        // u128 ans = *this / rhs; 
+        return *this = *this / rhs; 
     }
 }
