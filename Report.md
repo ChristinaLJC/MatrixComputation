@@ -19,7 +19,16 @@ To make full usage of the matrix access, we define the new type as proxy to temp
 - Test Framework 
   We build a private test framework system which can efficiently test our lib codes in a synchronously and asynchronously way. 
 - The advanced integral type 
-  We make a more wide integral type `int128_t` to use. Some more convenience techniques including the literals are used. 
+  We make a more wide integral type `int128_t` to use. Some more convenience techniques including the literals are used. Also the related `uint128_t` type is supported. 
+- Stringizing operator: Intelligently stringize an object. Make full use of the compiling rules to transfer an object as a string. 
+- Type Traits: Define quite a lot of type traits methods and operators for different types and for the future and unknown types. 
+- The exception inheriting system. Different exception are defined as an inheriting tree, and the core abstract exception classes cannot be instantiated. 
+- Assert Rule also is designed well in the inheriting system. Some more specific information would be given altogether with the context information. 
+- Format Library Support. It's convenient to construct a string in the format basic rule. 
+- Proxy Class for the visit control. 
+- Meta-Programming in the `uint128_t` and `int128_t` design. 
+- Type Upgrade automatically and intelligently. 
+- The algorithm design is divided completely with the matrix structure. It's open to design a better matrix based on the `OwnedMatrix` designs. For example the auto-owning matrixes and the inertia matrixes. 
 
 ---------------
 
@@ -646,6 +655,20 @@ template <typename Matrix>
 ![](D:\SUSTech\2022Spring\CPP\Project\res\convolution.png)
 
 ### OpenCV Transfer
+
+```C++
+            template <typename InnerType = ValueType, typename CV_Mat> 
+            static This from_cv_mat(CV_Mat const &self) {
+                This ans (self.rows, self.cols); 
+                for (size_t i = 0; i < self.rows; ++i) {
+                    for (size_t j = 0; j < self.cols; ++j) {
+                        ans[i][j] = self.template at<InnerType>(i, j); 
+                    }
+                }
+            }
+```
+
+
 
 ### Exceptions
 
