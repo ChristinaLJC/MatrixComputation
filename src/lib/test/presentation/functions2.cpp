@@ -4,6 +4,8 @@
 Use matrix; 
 Use matrix::algorithm;
 
+#define TIME_OUT 10s
+
 TEST_METHOD {
     LinearOwnedMatrix<std::complex<int>> x(2,2); 
     Use std::literals; 
@@ -50,7 +52,6 @@ TEST_METHOD {
     bassert_eq(z[1][2], 0);
     bassert_eq(z[2][2], 1);
 }
-
 TEST_METHOD{
     LinearOwnedMatrix<int> x(5000,5000);
     for (int i = 0; i < 5000; ++i){
@@ -94,7 +95,7 @@ TEST_METHOD{
     x[2][0] = 7;
     x[2][1] = 8;
     x[2][2] = 9;
-    auto y = slice(0,1,0,2);
+    auto y = x.slice(0,1,0,2);
     bassert_eq(y[0][0], 1);
     bassert_eq(y[0][1], 2);
     bassert_eq(y[0][2], 3);
@@ -114,7 +115,7 @@ TEST_METHOD{
     x[2][0] = 7;
     x[2][1] = 8;
     x[2][2] = 9;
-    auto y = reshape(1,9);
+    auto y = x.reshape(1,9);
     bassert_eq(y[0][0], 1);
     bassert_eq(y[0][1], 2);
     bassert_eq(y[0][2], 3);

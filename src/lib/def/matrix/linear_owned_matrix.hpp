@@ -389,7 +389,7 @@ namespace matrix {
                 // return ans;
                 
                 Super base = *this; 
-                return (std::move(base), r);  
+                return This(std::move(base), r);
             }
 
             LinearOwnedMatrix slice(size_t r0, size_t r1, size_t c0, size_t c1) const {
@@ -439,15 +439,15 @@ namespace matrix {
                 return true; 
             }
 
-            template <typename InnerType, typename CV_Mat> 
-            static This from_cv_mat(CV_Mat const &self) {
-                This ans (self.rows, self.cols); 
-                for (size_t i = 0; i < self.rows; ++i) {
-                    for (size_t j = 0; j < self.cols; ++j) {
-                        ans[i][j] = self.at<InnerType>(i, j); 
-                    }
-                }
-            }
+            // template <typename InnerType, typename CV_Mat> 
+            // static This from_cv_mat(CV_Mat const &self) {
+            //     This ans (self.rows, self.cols); 
+            //     for (size_t i = 0; i < self.rows; ++i) {
+            //         for (size_t j = 0; j < self.cols; ++j) {
+            //             ans[i][j] = self.at<InnerType>(i, j); 
+            //         }
+            //     }
+            // }
     };
     
 }
